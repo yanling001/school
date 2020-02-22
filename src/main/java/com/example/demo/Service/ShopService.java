@@ -1,0 +1,23 @@
+package com.example.demo.Service;
+
+import com.example.demo.common.ServiceResponse;
+import com.example.demo.pojo.Order;
+import com.example.demo.pojo.Product;
+import com.example.demo.pojo.Shop;
+import com.example.demo.pojo.vo.OrderVo;
+
+import java.util.List;
+
+public interface ShopService {
+    ServiceResponse addShop(Shop shop);
+
+    ServiceResponse addOrder(List<Integer> list, Integer userid, String remark);
+
+    ServiceResponse<List<OrderVo>> getorders(Integer shopid);
+
+    ServiceResponse<List<Shop>> getshops();
+
+    ServiceResponse addproduct(Integer shopid, Product product);
+
+    ServiceResponse update(Integer shopid, Product product);
+}

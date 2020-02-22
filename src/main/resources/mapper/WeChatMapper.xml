@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.WeChatMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.pojo.WeChat" >
+    <constructor >
+      <idArg column="wechat_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="nickname" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="province" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="country" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="avatarurl" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="gender" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="unionid" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    wechat_id, nickname, city, province, country, avatarurl, gender, unionid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from wechat
+    where wechat_id = #{wechatId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wechat
+    where wechat_id = #{wechatId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.pojo.WeChat" >
+    insert into wechat (wechat_id, nickname, city, 
+      province, country, avatarurl, 
+      gender, unionid)
+    values (#{wechatId,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{avatarurl,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=INTEGER}, #{unionid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.pojo.WeChat" >
+    insert into wechat
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wechatId != null" >
+        wechat_id,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="avatarurl != null" >
+        avatarurl,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="unionid != null" >
+        unionid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wechatId != null" >
+        #{wechatId,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarurl != null" >
+        #{avatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="unionid != null" >
+        #{unionid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.pojo.WeChat" >
+    update wechat
+    <set >
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarurl != null" >
+        avatarurl = #{avatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="unionid != null" >
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where wechat_id = #{wechatId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.pojo.WeChat" >
+    update wechat
+    set nickname = #{nickname,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      avatarurl = #{avatarurl,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      unionid = #{unionid,jdbcType=VARCHAR}
+    where wechat_id = #{wechatId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByUnionid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select    <include refid="Base_Column_List" />
+    from wechat
+    where unionid = #{unionid,jdbcType=INTEGER}
+  </select>
+</mapper>

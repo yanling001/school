@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.InvitationMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.pojo.Invitation">
+    <constructor>
+      <idArg column="invitation_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="uesr_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="invitation_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="accept_user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.example.demo.pojo.Invitation">
+    <constructor>
+      <idArg column="invitation_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="uesr_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="invitation_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="accept_user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="content" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    invitation_id, uesr_id,price, create_time, update_time, invitation_status, accept_user_id
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from invitation
+    where invitation_id = #{invitationId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from invitation
+    where invitation_id = #{invitationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.pojo.Invitation">
+    insert into invitation (invitation_id, uesr_id, create_time, 
+      update_time, invitation_status, accept_user_id, price,
+      content)
+    values (#{invitationId,jdbcType=INTEGER}, #{uesrId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{invitationStatus,jdbcType=INTEGER}, #{acceptUserId,jdbcType=INTEGER}, 
+      #{price,jdbcType=DECIMAL},#{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.pojo.Invitation">
+    insert into invitation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="invitationId != null">
+        invitation_id,
+      </if>
+      <if test="uesrId != null">
+        uesr_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="invitationStatus != null">
+        invitation_status,
+      </if>
+      <if test="acceptUserId != null">
+        accept_user_id,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="invitationId != null">
+        #{invitationId,jdbcType=INTEGER},
+      </if>
+      <if test="uesrId != null">
+        #{uesrId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invitationStatus != null">
+        #{invitationStatus,jdbcType=INTEGER},
+      </if>
+      <if test="acceptUserId != null">
+        #{acceptUserId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.pojo.Invitation">
+    update invitation
+    <set>
+      <if test="uesrId != null">
+        uesr_id = #{uesrId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invitationStatus != null">
+        invitation_status = #{invitationStatus,jdbcType=INTEGER},
+      </if>
+      <if test="acceptUserId != null">
+        accept_user_id = #{acceptUserId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where invitation_id = #{invitationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.demo.pojo.Invitation">
+    update invitation
+    set uesr_id = #{uesrId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      invitation_status = #{invitationStatus,jdbcType=INTEGER},
+      accept_user_id = #{acceptUserId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where invitation_id = #{invitationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.pojo.Invitation">
+    update invitation
+    set uesr_id = #{uesrId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      invitation_status = #{invitationStatus,jdbcType=INTEGER},
+      accept_user_id = #{acceptUserId,jdbcType=INTEGER},
+        price = #{price,jdbcType=DECIMAL}
+    where invitation_id = #{invitationId,jdbcType=INTEGER}
+  </update>
+
+  <!--自己定义的方法-->
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from invitation
+  </select>
+  <select id="selectUseraccept" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from invitation   where accept_user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectUserpublish" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from invitation   where uesr_id = #{userId,jdbcType=INTEGER}
+
+  </select>
+</mapper>

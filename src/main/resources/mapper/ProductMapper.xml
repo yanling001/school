@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.pojo.Product">
+    <constructor>
+      <idArg column="product_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="product_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="product_img" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="shop_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.example.demo.pojo.Product">
+    <constructor>
+      <idArg column="product_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="product_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="product_img" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="shop_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="product_describle" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    product_id, price, product_name, product_img, create_time, shop_id
+  </sql>
+  <sql id="Blob_Column_List">
+    product_describle
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.pojo.Product">
+    insert into product (product_id, price, product_name, 
+      product_img, create_time, shop_id, 
+      product_describle)
+    values (#{productId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{productName,jdbcType=VARCHAR}, 
+      #{productImg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{shopId,jdbcType=INTEGER}, 
+      #{productDescrible,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.pojo.Product">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="productImg != null">
+        product_img,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="shopId != null">
+        shop_id,
+      </if>
+      <if test="productDescrible != null">
+        product_describle,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productImg != null">
+        #{productImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="productDescrible != null">
+        #{productDescrible,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.pojo.Product">
+    update product
+    <set>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productImg != null">
+        product_img = #{productImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="productDescrible != null">
+        product_describle = #{productDescrible,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.demo.pojo.Product">
+    update product
+    set price = #{price,jdbcType=DECIMAL},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_img = #{productImg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      shop_id = #{shopId,jdbcType=INTEGER},
+      product_describle = #{productDescrible,jdbcType=LONGVARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.pojo.Product">
+    update product
+    set price = #{price,jdbcType=DECIMAL},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_img = #{productImg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      shop_id = #{shopId,jdbcType=INTEGER}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+
+  <!--自己定义的放法-->
+  <select id="selectByids" parameterType="list" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+      from product
+    where product_id in
+    <foreach close=")" collection="list" index="" item="item" open="(" separator=",">
+        #{item}
+    </foreach>
+  </select>
+  <select id="selectShopid" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+     select  shop_id   from product
+    where product_id  = #{productId,jdbcType=INTEGER}
+  </select>
+</mapper>
