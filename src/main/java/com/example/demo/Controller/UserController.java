@@ -37,7 +37,7 @@ public class UserController {
     private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
 
     private String openid;
-    private String session_key;
+    private String sessionid;
     @Autowired
     UserService userService;
     @Autowired
@@ -47,14 +47,15 @@ public class UserController {
     @ResponseBody
     private ServiceResponse login(@RequestBody String jsonData) {
         System.out.println("infoData" + jsonData);
-     /*   JSONObject dataObj = JSONObject.parseObject(jsonData);
+       JSONObject dataObj = JSONObject.parseObject(jsonData);
         String  code =  (String) dataObj.get("code");
         String  encryptedData =  (String) dataObj.get("encryptedData");
         String  iv =  (String) dataObj.get("iv");
-        String sessionkey = getSessionKey(code);*/
-        JSONObject userInfo =JSONObject.parseObject(jsonData);// this.getUserInfo(encryptedData, sessionkey, iv);
+        String sessionkey = getSessionKey(code);
+        JSONObject userInfo = this.getUserInfo(encryptedData, sessionkey, iv);//JSONObject.parseObject(jsonData);
+        System.out.println(userInfo.toJSONString());
         User user=  JSON.parseObject(userInfo.toJSONString(),User.class);
-        user.setOpenidWeb("zhangsanlisi");//((String) userInfo.get("openid"));
+        user.setOpenidWeb((String) userInfo.get("openid"));//
          User temp=userMapper.checkUser(user.getNickname(),user.getOpenidWeb());
          if (temp==null){
              userMapper.insert(user);
