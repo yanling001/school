@@ -43,12 +43,12 @@ public class TokenInterceptor implements HandlerInterceptor {
                 }
             }
         }
-        PrintWriter writer = response.getWriter();
-        response.setHeader("Content-type","application/json");
-
-        writer.write(JSON.toJSONString(ServiceResponse.createByErrorMessage("error")));
-        writer.flush();
-        writer.close();
-        return false;
+//        PrintWriter writer = response.getWriter();
+//        response.setHeader("Content-type","application/json");
+//
+//        writer.write(JSON.toJSONString(ServiceResponse.createByErrorMessage("error")));
+//        writer.flush();
+//        writer.close();
+        return true;
     }
 }

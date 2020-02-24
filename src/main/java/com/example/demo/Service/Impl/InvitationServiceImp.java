@@ -7,6 +7,7 @@ import com.example.demo.dao.InvitationMapper;
 import com.example.demo.dao.UserMapper;
 import com.example.demo.pojo.Invitation;
 import com.example.demo.pojo.InvitationCollect;
+import com.example.demo.pojo.User;
 import com.example.demo.pojo.vo.InvitationVo;
 import com.example.demo.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class InvitationServiceImp implements InvitationService {
     private RedisTemplate redisTemplate;
     @Override
     public ServiceResponse<List<InvitationVo>> getindex() {
-        List<InvitationVo> invitationVos = makevo(invitationMapper.selectAll());
+       List<Invitation> list=  invitationMapper.selectAll();
+        List<InvitationVo> invitationVos = makevo(list);
         return  ServiceResponse.createBysuccessMessage("ok",invitationVos);
     }
 
@@ -37,7 +39,6 @@ public class InvitationServiceImp implements InvitationService {
     public ServiceResponse addinvitation(Invitation invitation) {
         invitation.setInvitationStatus(0);
 
-        invitation.setCreateTime(new Date());
         invitation.setUpdateTime(new Date());
         int temp=invitationMapper.insertSelective(invitation);
         if(temp<0){
@@ -77,12 +78,13 @@ public class InvitationServiceImp implements InvitationService {
            InvitationVo invitationVo=new InvitationVo();
            invitationVo.setContent(temp.getContent());
            invitationVo.setPrice(temp.getPrice());
-           invitationVo.setCreateTime(temp.getCreateTime());
-           invitationVo.setInvitationId(temp.getInvitationId());
+           invitationVo.setTime(temp.getCreateTime());
+           invitationVo.setId(temp.getInvitationId());
            invitationVo.setInvitationStatus(temp.getInvitationStatus());
-           invitationVo.setUser(userMapper.selectByPrimaryKey(temp.getUesrId()));
+           User user=userMapper.selectByPrimaryKey(temp.getUesrId());
+           invitationVo.setPerson(user.getNickname());
+           invitationVo.setHead(user.getAvatarurl());
            invitationVo.setUesrId(temp.getUesrId());
-           invitationVo.setUpdateTime(temp.getUpdateTime());
            invitationVos.add(invitationVo);
        }
        return invitationVos;

@@ -33,13 +33,14 @@ public class Invitation {
         this.price = price;
     }
 
-    public Invitation(Integer invitationId, Integer uesrId, Date createTime, Date updateTime, Integer invitationStatus, Integer acceptUserId, String content) {
+    public Invitation(Integer invitationId, Integer uesrId, Date createTime, Date updateTime, Integer invitationStatus, Integer acceptUserId, BigDecimal price,String content) {
         this.invitationId = invitationId;
         this.uesrId = uesrId;
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.invitationStatus = invitationStatus;
         this.acceptUserId = acceptUserId;
+        this.price=price;
         this.content = content;
     }
 

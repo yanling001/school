@@ -1,28 +1,48 @@
 package com.example.demo.pojo.vo;
 
-import com.example.demo.pojo.User;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
 @ApiModel(description="帖子信息InvitationVo")
 public class InvitationVo {
-    @ApiModelProperty(value="帖子发出者的用户信息")
-    private User user;
-    @ApiModelProperty(value="跑腿帖子")
-    private Integer invitationId;
-    @ApiModelProperty(value="发帖子的用户id")
+    private  Integer id;
+    private String person;
+    private String head;
     private Integer uesrId;
-    @ApiModelProperty(value="帖子的创建时间")
-    private Date createTime;
-    @ApiModelProperty(value="帖子信息更新时间")
-    private Date updateTime;
-    @ApiModelProperty(value="跑腿帖子的状态：0表示未被接受，1：表示已经被别人接受，2：表示跑腿完成")
+    private Date time;
     private Integer invitationStatus;
-    @ApiModelProperty(value="跑腿帖子的内容")
     private String content;
     private BigDecimal price;
+    public InvitationVo(){
+        super();
+    }
+    public InvitationVo(Integer id, String person, String head, Integer uesrId, Date time, Integer invitationStatus, String content, BigDecimal price) {
+        this.id = id;
+        this.person = person;
+        this.head = head;
+        this.uesrId = uesrId;
+        this.time = time;
+        this.invitationStatus = invitationStatus;
+        this.content = content;
+        this.price = price;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
 
     public BigDecimal getPrice() {
         return price;
@@ -32,21 +52,22 @@ public class InvitationVo {
         this.price = price;
     }
 
-    public User getUser() {
-        return user;
+    public String getPerson() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPerson(String person) {
+        this.person = person;
     }
 
-    public Integer getInvitationId() {
-        return invitationId;
+    public String getHead() {
+        return head;
     }
 
-    public void setInvitationId(Integer invitationId) {
-        this.invitationId = invitationId;
+    public void setHead(String head) {
+        this.head = head;
     }
+
 
     public Integer getUesrId() {
         return uesrId;
@@ -56,21 +77,7 @@ public class InvitationVo {
         this.uesrId = uesrId;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public Integer getInvitationStatus() {
         return invitationStatus;

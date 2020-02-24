@@ -33,9 +33,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private String appid= "wxba447fb7b8387ff2";
-    private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
-
+ //   private String appid= "wxba447fb7b8387ff2";
+    //private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
+    private String appid= "wx6ed324df0267565f";
+    private String appsecret="069b310fb741669422d3995cfaf54030";
     private String openid;
     private String sessionid;
     @Autowired
@@ -45,7 +46,7 @@ public class UserController {
     //登录接口
     @RequestMapping("/login")
     @ResponseBody
-    private ServiceResponse login(@RequestBody String jsonData) {
+    private ServiceResponse<Map<String,Object>> login(@RequestBody String jsonData) {
         System.out.println("infoData" + jsonData);
        JSONObject dataObj = JSONObject.parseObject(jsonData);
         String  code =  (String) dataObj.get("code");
@@ -55,15 +56,23 @@ public class UserController {
         JSONObject userInfo = this.getUserInfo(encryptedData, sessionkey, iv);//JSONObject.parseObject(jsonData);
         System.out.println(userInfo.toJSONString());
         User user=  JSON.parseObject(userInfo.toJSONString(),User.class);
-        user.setOpenidWeb((String) userInfo.get("openid"));//
+        user.setOpenidWeb((String) userInfo.get("openId"));//
+        System.out.println(user.getNickname()+"   "+user.getOpenidWeb());
          User temp=userMapper.checkUser(user.getNickname(),user.getOpenidWeb());
+         Map<String,Object> map=new HashMap();
+
          if (temp==null){
              userMapper.insert(user);
+             User checkUser=userMapper.checkUser(user.getNickname(),user.getOpenidWeb());
+             map.put("userid",checkUser.getUserId());
              String token = JWTUtil.sign(user);
-             return ServiceResponse.createBysuccessMessage("ok",token);
+             map.put("token",token);
+             return ServiceResponse.createBysuccessMessage("ok",map);
          }
         String token = JWTUtil.sign(temp);
-        return ServiceResponse.createBysuccessMessage("ok",token);
+        map.put("userid",temp.getUserId());
+        map.put("token",token);
+        return ServiceResponse.createBysuccessMessage("ok",map);
     }
     private JSONObject getUserInfo(String encryptedData, String sessionkey, String iv) {
         // 被加密的数据

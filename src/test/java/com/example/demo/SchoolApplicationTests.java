@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.dao.*;
 
 import com.example.demo.pojo.*;
+import com.example.demo.util.BigDecimalUtil;
 import com.example.demo.util.DateTimeUtil;
 import com.example.demo.util.HttpUtil;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -83,8 +85,26 @@ public class  SchoolApplicationTests {
     private RedisTemplate redisTemplate;
   @Test
     public  void redis(){
-      String key = "productcategory"+1;
-      System.out.println(redisTemplate.hasKey(key));
-
+      //String key = "productcategory"+1;
+      //System.out.println(redisTemplate.hasKey(key));
+      Map<String,Object> map=new HashMap<>();
+      map.put("p",1);
+      map.put("content","tset");
+      map.put("time",DateTimeUtil.dateToStr(new Date()));
+      map.put("price", new BigDecimal(123.4));
+      System.out.println(JSON.toJSONString(map));
+      Shop shop=new Shop();
+      shop.setShopname("饺子");
+      shop.setLocation("西安");
+      shop.setUserId(1);
+      shop.setTel("1234567");
+      System.out.println(JSON.toJSONString(shop));
+      Product product=new Product();
+      product.setProductName("羊肉饺子");
+      product.setPrice(new BigDecimal(123.4));
+      product.setProductImg("url");
+      product.setShopId(1);
+      product.setProductDescrible("xxxx");
+      System.out.println(JSON.toJSONString(product));
   }
 }

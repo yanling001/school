@@ -1,16 +1,17 @@
 package com.example.demo.Controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Service.InvitationService;
 import com.example.demo.common.ServiceResponse;
 import com.example.demo.pojo.Invitation;
 import com.example.demo.pojo.vo.InvitationVo;
+import com.example.demo.util.DateTimeUtil;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 import java.util.List;
 
 @Api(description = "跑腿相关的api")
@@ -31,14 +32,15 @@ public class InvitationController {
     @RequestMapping(value = "add",method = RequestMethod.POST)
     @ResponseBody
       //使用@ApiOperation注解来修饰接口
-     @ApiImplicitParams({
-                @ApiImplicitParam(name = "user_id", value = "用户id",dataType = "int",required = true),
-                @ApiImplicitParam(name = "content", value = "文档", required = true),     //使用ApiImplcitParam修饰接口参数
-                @ApiImplicitParam(name = "time", value = "创建时间", required = true )     //使用ApiImplcitParam修饰接口参数
-        })
       @ApiOperation(value = "通过用户Id来获取用户信息",notes = "RestFul风格，需要传用户Id" )
-    public ServiceResponse addinvitation(Invitation invitation){
-        return  invitationService.addinvitation(invitation);
+    public ServiceResponse addinvitation(@RequestBody String invitation){
+        JSONObject dataObj = JSONObject.parseObject(invitation);
+        Invitation invitations=new Invitation();
+        invitations.setUesrId((Integer) dataObj.get("p"));
+        invitations.setCreateTime(DateTimeUtil.strToDate((String) dataObj.get("time"),DateTimeUtil.STANDARD_FORMAT));
+        invitations.setContent(dataObj.getString("content"));
+        invitations.setPrice(dataObj.getBigDecimal("price"));
+        return  invitationService.addinvitation(invitations);
     }
     //接受帖子
       @ApiImplicitParams({

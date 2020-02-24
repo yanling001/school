@@ -31,6 +31,7 @@ public class ShopServiceImp implements ShopService {
     WeChatMapper weChatMapper;
     @Override
     public ServiceResponse addShop(Shop shop) {
+
         int k= shopMapper.insert(shop);
         if (k>=0) return ServiceResponse.createBysuccessMessage("ok");
         else  return ServiceResponse.createByErrorMessage("error");
