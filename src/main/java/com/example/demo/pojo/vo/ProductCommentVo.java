@@ -10,8 +10,8 @@ public class ProductCommentVo {
 
     private Integer productId;
 
-    private User user;
-
+    private String user;
+   private  String headimage;
     private Date createTime;
 
     private Integer star;
@@ -19,12 +19,20 @@ public class ProductCommentVo {
     private String content;
     private List<String> images;
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getHeadimage() {
+        return headimage;
+    }
+
+    public void setHeadimage(String headimage) {
+        this.headimage = headimage;
     }
 
     public Integer getCommentId() {

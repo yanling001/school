@@ -3,13 +3,11 @@ package com.example.demo.Service.Impl;
 import com.example.demo.Service.SecondHandService;
 import com.example.demo.common.ServiceResponse;
 import com.example.demo.dao.*;
-import com.example.demo.pojo.Collect;
-import com.example.demo.pojo.Image;
-import com.example.demo.pojo.ProductComment;
-import com.example.demo.pojo.SecondHandProduct;
+import com.example.demo.pojo.*;
 import com.example.demo.pojo.vo.ProductCommentVo;
 import com.example.demo.pojo.vo.ProductVo;
 import com.example.demo.pojo.vo.SecondHandProductVo;
+import com.example.demo.util.DateTimeUtil;
 import com.example.demo.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +32,33 @@ public class SecondHandServiceImp implements SecondHandService {
     @Override
     public ServiceResponse<List<SecondHandProductVo>> getproductinfo() {
        List<SecondHandProduct> list=secondHandProductMapper.selectAll();
-       List<SecondHandProductVo> relist=makevo(list);
+       List<SecondHandProductVo> relist=makevoeasy(list);
         return ServiceResponse.createBysuccessMessage("ok",relist);
+    }
+
+    private List<SecondHandProductVo> makevoeasy(List<SecondHandProduct> list) {
+        ArrayList<SecondHandProductVo> lists=new ArrayList<>();
+        for (SecondHandProduct secondHandProduct:list){
+            SecondHandProductVo secondHandProductVo=new SecondHandProductVo();
+            secondHandProductVo.setContent(secondHandProduct.getContent());
+            secondHandProductVo.setCreateTime(secondHandProduct.getCreateTime());
+            secondHandProductVo.setProductId(secondHandProduct.getProductId());
+            secondHandProductVo.setPrice(secondHandProduct.getPrice());
+            secondHandProductVo.setStatus(secondHandProduct.getStatus());
+            secondHandProductVo.setVideoAddress(secondHandProduct.getVideoAddress());
+            secondHandProductVo.setTitle(secondHandProduct.getName());
+            secondHandProductVo.setLocation(secondHandProduct.getLocation());
+            secondHandProductVo.setNewDegree(secondHandProduct.getNewDegree());
+            User user=userMapper.selectByPrimaryKey(secondHandProduct.getUserId());
+            secondHandProductVo.setName(user.getNickname());
+            secondHandProductVo.setTel(user.getPhone());
+            secondHandProductVo.setQq(user.getEmail());
+            secondHandProductVo.setImages(imageMapper.selectImageByproductid(secondHandProduct.getProductId()));
+            lists.add(secondHandProductVo);
+        }
+        return lists;
+
+
     }
 
     @Override
@@ -47,9 +70,10 @@ public class SecondHandServiceImp implements SecondHandService {
 
     @Override
     public ServiceResponse addproduct(SecondHandProduct product,List<String> image) {
-        product.setCreateTime(new Date());
+
+        product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         product.setStatus(0);
-        secondHandProductMapper.insert(product);
+        secondHandProductMapper.insertSelective(product);
         //获取id
         int id=secondHandProductMapper.selectid(product);
         for (String url:image) {
@@ -71,12 +95,11 @@ public class SecondHandServiceImp implements SecondHandService {
     }
 
     @Override
-    public ServiceResponse comments(ProductComment productComment, MultipartFile[] files) {
-        productComment.setCreateTime(new Date());
-        productCommentMapper.insert(productComment);
+    public ServiceResponse comments(ProductComment productComment, List<String> images) {
+        productComment.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
+        productCommentMapper.insertSelective(productComment);
         int id=productCommentMapper.getcommentid(productComment);
-        for (MultipartFile file:files) {
-           String url = FileUtil.uplod(file);
+        for (String url:images) {
            Image image=new Image();
            image.setCommentId(id);
            image.setImgAddress(url);
@@ -87,6 +110,12 @@ public class SecondHandServiceImp implements SecondHandService {
         return ServiceResponse.createBysuccessMessage("ok");
     }
 
+    @Override
+    public ServiceResponse<SecondHandProductVo> getproductinfobyid(Integer id) {
+        ServiceResponse.createBysuccessMessage("ok",makevo(secondHandProductMapper.selectByPrimaryKey(id)));
+        return null;
+    }
+    //看没有收藏的
     private List<ProductVo> makeProductvo(List<SecondHandProduct> list,Integer userId) {
         List<ProductVo> relist=new ArrayList<>();
         for (SecondHandProduct secondHandProduct: list){
@@ -110,24 +139,24 @@ public class SecondHandServiceImp implements SecondHandService {
         return  relist;
     }
 
-    private List<SecondHandProductVo> makevo(List<SecondHandProduct> list) {
-        List<SecondHandProductVo> relist=new ArrayList<>();
-        for (SecondHandProduct secondHandProduct: list){
+    private SecondHandProductVo makevo(SecondHandProduct secondHandProduct) {
             SecondHandProductVo secondHandProductVo=new SecondHandProductVo();
-            secondHandProductVo.setCategory(secondHandProduct.getCategory());
             secondHandProductVo.setContent(secondHandProduct.getContent());
             secondHandProductVo.setCreateTime(secondHandProduct.getCreateTime());
             secondHandProductVo.setProductId(secondHandProduct.getProductId());
-            secondHandProductVo.setName(secondHandProduct.getName());
             secondHandProductVo.setPrice(secondHandProduct.getPrice());
             secondHandProductVo.setStatus(secondHandProduct.getStatus());
             secondHandProductVo.setVideoAddress(secondHandProduct.getVideoAddress());
-            secondHandProductVo.setUser(userMapper.selectByPrimaryKey(secondHandProduct.getUserId()));
+            secondHandProductVo.setTitle(secondHandProduct.getName());
+            secondHandProductVo.setLocation(secondHandProduct.getLocation());
+            secondHandProductVo.setNewDegree(secondHandProduct.getNewDegree());
+            User user=userMapper.selectByPrimaryKey(secondHandProduct.getUserId());
+            secondHandProductVo.setName(user.getNickname());
+            secondHandProductVo.setTel(user.getPhone());
+            secondHandProductVo.setQq(user.getEmail());
             secondHandProductVo.setComments(makecommentvo(productCommentMapper.selectByproductid(secondHandProduct.getProductId())));
             secondHandProductVo.setImages(imageMapper.selectImageByproductid(secondHandProduct.getProductId()));
-           relist.add(secondHandProductVo);
-        }
-        return  relist;
+        return  secondHandProductVo;
     }
 
     private List<ProductCommentVo> makecommentvo(List<ProductComment> list) {
@@ -140,7 +169,9 @@ public class SecondHandServiceImp implements SecondHandService {
             productCommentVo.setProductId(productComment.getProductId());
             productCommentVo.setStar(productComment.getStar());
             productCommentVo.setImages(imageMapper.selectImageBycommentid(productComment.getCommentId()));
-            productCommentVo.setUser(userMapper.selectByPrimaryKey(productComment.getUserId()));
+             User user=userMapper.selectByPrimaryKey(productComment.getUserId());
+             productCommentVo.setUser(user.getNickname());
+             productCommentVo.setHeadimage(user.getAvatarurl());
             relist.add(productCommentVo);
         }
         return  relist;

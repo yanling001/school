@@ -33,6 +33,10 @@ public class ShopServiceImp implements ShopService {
     public ServiceResponse addShop(Shop shop) {
 
         int k= shopMapper.insert(shop);
+        User user=new User();
+        user.setRole(1);
+        user.setUserId(shop.getUserId());
+        userMapper.updateByPrimaryKeySelective(user);
         if (k>=0) return ServiceResponse.createBysuccessMessage("ok");
         else  return ServiceResponse.createByErrorMessage("error");
     }
@@ -77,6 +81,7 @@ public class ShopServiceImp implements ShopService {
     @Override
     public ServiceResponse addproduct(Integer shopid, Product product) {
         product.setShopId(shopid);
+        product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         int i=productMapper.insert(product);
         if (i>0) return  ServiceResponse.createBysuccessMessage("ok");
         return ServiceResponse.createByErrorMessage("error");

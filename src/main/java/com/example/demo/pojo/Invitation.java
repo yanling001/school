@@ -1,27 +1,18 @@
 package com.example.demo.pojo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 
-@ApiModel(description="跑腿帖子实体对象")
 public class Invitation {
-    @ApiModelProperty(value="跑腿帖子",name="username")
     private Integer invitationId;
-    @ApiModelProperty(value="发帖子的用户id",name="uesrId")
+
     private Integer uesrId;
-    @ApiModelProperty(value="帖子的创建时间",name="createTime")
+
     private Date createTime;
-    @ApiModelProperty(value="帖子信息更新时间",name="updateTime")
     private Date updateTime;
-    @ApiModelProperty(value="跑腿帖子的状态：0表示未被接受，1：表示已经被别人接受，2：表示跑腿完成",name="invitationStatus")
     private Integer invitationStatus;
-    @ApiModelProperty(value="接帖子的用户id",name="acceptUserId")
     private Integer acceptUserId;
-    @ApiModelProperty(value="跑腿帖子的内容",name="content")
     private String content;
     private BigDecimal price;
 

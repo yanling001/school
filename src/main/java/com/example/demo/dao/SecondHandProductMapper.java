@@ -4,7 +4,6 @@ import com.example.demo.pojo.SecondHandProduct;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 @Repository
 public interface SecondHandProductMapper {
     int deleteByPrimaryKey(Integer productId);
@@ -21,7 +20,7 @@ public interface SecondHandProductMapper {
 
     int updateByPrimaryKey(SecondHandProduct record);
 
-    List<SecondHandProduct> selectAll();
+    int selectid(SecondHandProduct product);
 
-    Integer selectid(SecondHandProduct product);
+    List<SecondHandProduct> selectAll();
 }

@@ -21,7 +21,6 @@ public class InvitationController {
     @Autowired
     InvitationService invitationService;
     //获取页面信息
-    @ApiOperation(value = "载入界面时获取跑腿信息", notes = "查询数据库的全部跑腿帖子")
     @RequestMapping(value = "inf",method = RequestMethod.GET)
     @ResponseBody
     public ServiceResponse<List<InvitationVo>> getIndex(){
@@ -31,8 +30,6 @@ public class InvitationController {
     //添加跑腿帖子
     @RequestMapping(value = "add",method = RequestMethod.POST)
     @ResponseBody
-      //使用@ApiOperation注解来修饰接口
-      @ApiOperation(value = "通过用户Id来获取用户信息",notes = "RestFul风格，需要传用户Id" )
     public ServiceResponse addinvitation(@RequestBody String invitation){
         JSONObject dataObj = JSONObject.parseObject(invitation);
         Invitation invitations=new Invitation();
@@ -43,11 +40,7 @@ public class InvitationController {
         return  invitationService.addinvitation(invitations);
     }
     //接受帖子
-      @ApiImplicitParams({
-              @ApiImplicitParam(name = "id", value = "帖子id",dataType = "int", required = true),
-              @ApiImplicitParam(name = "user_id", value = "用户id",dataType = "int", required = true)
-      })
-       @ApiOperation(value = "通过用户Id和帖子id来接受帖子",notes = "RestFul风格，需要传用户Id帖子id" )
+
        @ResponseBody
        @RequestMapping(value = "accept",method = RequestMethod.GET)
      public ServiceResponse acceptinvitation(@RequestParam(value = "id") Integer invitation_id,

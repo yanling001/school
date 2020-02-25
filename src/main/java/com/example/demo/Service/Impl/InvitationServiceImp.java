@@ -38,8 +38,8 @@ public class InvitationServiceImp implements InvitationService {
     @Override
     public ServiceResponse addinvitation(Invitation invitation) {
         invitation.setInvitationStatus(0);
-
-        invitation.setUpdateTime(new Date());
+        invitation.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
+        invitation.setUpdateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         int temp=invitationMapper.insertSelective(invitation);
         if(temp<0){
             return  ServiceResponse.createByErrorMessage("数据库操作错误");

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.dao.*;
 
 import com.example.demo.pojo.*;
+import com.example.demo.pojo.vo.SecondHandProductVo;
 import com.example.demo.util.BigDecimalUtil;
 import com.example.demo.util.DateTimeUtil;
 import com.example.demo.util.HttpUtil;
@@ -75,10 +76,13 @@ public class  SchoolApplicationTests {
 //        user.setEmail("1604267198@qq.com");
 //        userMapper.insertSelective(user);
         Map<String,Object> map=new HashMap<>();
-        User user=userMapper.selectByPrimaryKey(1);
-        map.put("status",0);
-        map.put("msg","ok");
-        map.put("user",user);
+     //   User user=userMapper.selectByPrimaryKey(1);
+        List<Integer> list=new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        map.put("remark","少放辣");
+        map.put("user",7);
+        map.put("list",list);
         System.out.println(JSON.toJSON(map));
     }
     @Autowired
@@ -87,24 +91,49 @@ public class  SchoolApplicationTests {
     public  void redis(){
       //String key = "productcategory"+1;
       //System.out.println(redisTemplate.hasKey(key));
-      Map<String,Object> map=new HashMap<>();
-      map.put("p",1);
-      map.put("content","tset");
-      map.put("time",DateTimeUtil.dateToStr(new Date()));
-      map.put("price", new BigDecimal(123.4));
-      System.out.println(JSON.toJSONString(map));
-      Shop shop=new Shop();
-      shop.setShopname("饺子");
-      shop.setLocation("西安");
-      shop.setUserId(1);
-      shop.setTel("1234567");
-      System.out.println(JSON.toJSONString(shop));
-      Product product=new Product();
-      product.setProductName("羊肉饺子");
-      product.setPrice(new BigDecimal(123.4));
-      product.setProductImg("url");
-      product.setShopId(1);
-      product.setProductDescrible("xxxx");
-      System.out.println(JSON.toJSONString(product));
+//      Map<String,Object> map=new HashMap<>();
+//      map.put("p",1);
+//      map.put("content","tset");
+//      map.put("time",DateTimeUtil.dateToStr(new Date()));
+//      map.put("price", new BigDecimal(123.4));
+//      System.out.println(JSON.toJSONString(map));
+//      Shop shop=new Shop();
+//      shop.setShopname("饺子");
+//      shop.setLocation("西安");
+//      shop.setUserId(1);
+//      shop.setTel("1234567");
+//      System.out.println(JSON.toJSONString(shop));
+//      Product product=new Product();
+//      product.setProductName("羊肉饺子");
+//      product.setPrice(new BigDecimal(123.4));
+//      product.setProductImg("url");
+//      product.setShopId(1);
+//      product.setProductDescrible("xxxx");
+//      System.out.println(JSON.toJSONString(product));
+//      SecondHandProductVo secondHandProductVo=new SecondHandProductVo();
+//      secondHandProductVo.setTitle("课桌");
+//      secondHandProductVo.setNewDegree("八成");
+//      List<String> list=new ArrayList<>();
+//      list.add("https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ132");
+//      list.add("https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ13dsf");
+//      secondHandProductVo.setImages(list);
+//      System.out.println(JSON.toJSONString(secondHandProductVo));
+//      System.out.println(secondHandProductMapper.selectByPrimaryKey(24).getCreateTime());
+//      ProductComment productComment=new ProductComment();
+//      productComment.setUserId(1);
+//      productComment.setStar(4);
+//      productComment.setContent("不错");
+//      productComment.setProductId(2);
+//      System.out.println(JSON.toJSONString(productComment));
+//      Product product=new Product();
+//      product.setShopId(1);
+//      product.setProductId(1);
+//      product.setPrice(BigDecimal.valueOf(144.0));
+//      product.setProductDescrible("2333");
+//      product.setProductName("羊肉饺子");
+//      product.setProductImg("url..");
+//      product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
+//      productMapper.updateByPrimaryKey(product);
+
   }
 }

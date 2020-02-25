@@ -19,5 +19,7 @@ public interface SecondHandService {
 
     ServiceResponse collect(Integer userid, Integer productid);
 
-    ServiceResponse comments(ProductComment productComment, MultipartFile[] file);
+    ServiceResponse comments(ProductComment productComment,List<String> images);
+
+    ServiceResponse<SecondHandProductVo> getproductinfobyid(Integer id);
 }

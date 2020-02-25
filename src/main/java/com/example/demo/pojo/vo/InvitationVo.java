@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 
 import java.math.BigDecimal;
 import java.util.Date;
-@ApiModel(description="帖子信息InvitationVo")
 public class InvitationVo {
     private  Integer id;
     private String person;

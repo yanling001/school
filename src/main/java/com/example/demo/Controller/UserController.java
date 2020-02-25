@@ -33,10 +33,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
- //   private String appid= "wxba447fb7b8387ff2";
-    //private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
-    private String appid= "wx6ed324df0267565f";
-    private String appsecret="069b310fb741669422d3995cfaf54030";
+    private String appid= "wxba447fb7b8387ff2";
+    private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
+   // private String appid= "wx6ed324df0267565f";
+   // private String appsecret="069b310fb741669422d3995cfaf54030";
     private String openid;
     private String sessionid;
     @Autowired
@@ -128,11 +128,6 @@ public class UserController {
 
     private String getSessionKey(String code) {
         String url = "https://api.weixin.qq.com/sns/jscode2session"+"?appid="+appid+"&secret="+appsecret+"&js_code="+code+"&grant_type=authorization_code";
-        Map<String, String> map = new HashMap();
-        map.put("appid", "wxba447fb7b8387ff2");
-        map.put("appsecret", "e420d0eb7fdc85016d2a885a7ee3f162");
-        map.put("js_code", code);
-        map.put("grant_type", "authorization_code");
         // 解析json
         JSONObject jsonObject = HttpUtil.GET(url);
         System.out.println(jsonObject.toJSONString());

@@ -20,9 +20,13 @@ public class SecondHandProduct {
 
     private Integer status;
 
+    private String newDegree;
+
+    private String location;
+
     private String content;
 
-    public SecondHandProduct(Integer productId, String category, String name, Integer userId, Date createTime, String videoAddress, BigDecimal price, Integer status, String content) {
+    public SecondHandProduct(Integer productId, String category, String name, Integer userId, Date createTime, String videoAddress, BigDecimal price, Integer status, String newDegree, String location, String content) {
         this.productId = productId;
         this.category = category;
         this.name = name;
@@ -31,6 +35,8 @@ public class SecondHandProduct {
         this.videoAddress = videoAddress;
         this.price = price;
         this.status = status;
+        this.newDegree = newDegree;
+        this.location = location;
         this.content = content;
     }
 
@@ -100,6 +106,22 @@ public class SecondHandProduct {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getNewDegree() {
+        return newDegree;
+    }
+
+    public void setNewDegree(String newDegree) {
+        this.newDegree = newDegree == null ? null : newDegree.trim();
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location == null ? null : location.trim();
     }
 
     public String getContent() {

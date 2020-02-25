@@ -35,9 +35,11 @@ public class TokenInterceptor implements HandlerInterceptor {
                 //校验token
                 String nickname = claimMap.get("nickname").asString();
                 String openid = claimMap.get("openid").asString();
+                Integer role = claimMap.get("role").asInt();
+                System.out.println(nickname+"  "+openid+"  "+role);
                 User user = userMapper.checkUser(nickname, openid);
-
                 if (user != null) {
+                    request.setAttribute("claim",claimMap);
                     // 存入redis
                     return true;
                 }

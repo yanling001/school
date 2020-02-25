@@ -13,13 +13,19 @@ public class Shop {
 
     private Integer userId;
 
-    public Shop(Integer shopId, String category, String shopname, String location, String tel, Integer userId) {
+    private String imgstore;
+
+    private String intro;
+
+    public Shop(Integer shopId, String category, String shopname, String location, String tel, Integer userId, String imgstore, String intro) {
         this.shopId = shopId;
         this.category = category;
         this.shopname = shopname;
         this.location = location;
         this.tel = tel;
         this.userId = userId;
+        this.imgstore = imgstore;
+        this.intro = intro;
     }
 
     public Shop() {
@@ -72,5 +78,21 @@ public class Shop {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getImgstore() {
+        return imgstore;
+    }
+
+    public void setImgstore(String imgstore) {
+        this.imgstore = imgstore == null ? null : imgstore.trim();
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro == null ? null : intro.trim();
     }
 }

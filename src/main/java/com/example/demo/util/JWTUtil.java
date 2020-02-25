@@ -40,7 +40,7 @@ public class JWTUtil {
             Map<String, Object> headerMap = new HashMap<>(2);
             headerMap.put("type", "JWT");
             headerMap.put("alg", "HS256");
-            return JWT.create().withHeader(headerMap).withClaim("nickname", user.getNickname()).withClaim("openid",openid).withExpiresAt(expiration_time).sign(algorithm);
+            return JWT.create().withHeader(headerMap).withClaim("nickname", user.getNickname()).withClaim("openid",openid).withClaim("role",user.getRole()).withExpiresAt(expiration_time).sign(algorithm);
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;
