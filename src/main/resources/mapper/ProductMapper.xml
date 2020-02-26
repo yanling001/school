@@ -157,4 +157,12 @@
      select  shop_id   from product
     where product_id  = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectByshopid" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from product
+    where shop_id =#{shopId,jdbcType=INTEGER}
+  </select>
 </mapper>

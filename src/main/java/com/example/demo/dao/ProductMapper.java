@@ -23,4 +23,6 @@ public interface ProductMapper {
     List<Product> selectByids(List<Integer> list);
 
     Integer selectShopid(Integer productId);
+
+    List<Product> selectByshopid(Integer shopId);
 }

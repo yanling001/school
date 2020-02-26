@@ -1,10 +1,14 @@
 package com.example.demo.Service.Impl;
 
+import com.example.demo.Controller.ShopController;
 import com.example.demo.Service.ShopService;
 import com.example.demo.common.ServiceResponse;
 import com.example.demo.dao.*;
 import com.example.demo.pojo.*;
 import com.example.demo.pojo.vo.OrderVo;
+import com.example.demo.pojo.vo.ProductVo;
+import com.example.demo.pojo.vo.ShopProductVo;
+import com.example.demo.pojo.vo.ShopVo;
 import com.example.demo.util.BigDecimalUtil;
 import com.example.demo.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +33,15 @@ public class ShopServiceImp implements ShopService {
     UserMapper userMapper;
     @Autowired
     WeChatMapper weChatMapper;
+    @Autowired
+    CollectShopMapper collectShopMapper;
     @Override
     public ServiceResponse addShop(Shop shop) {
 
+
+        User user=userMapper.selectByPrimaryKey(shop.getUserId());
+        shop.setTel(user.getPhone());
         int k= shopMapper.insert(shop);
-        User user=new User();
         user.setRole(1);
         user.setUserId(shop.getUserId());
         userMapper.updateByPrimaryKeySelective(user);
@@ -42,7 +50,7 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public ServiceResponse addOrder(List<Integer> list, Integer userid,String remark) {
+    public ServiceResponse addOrder(List<Integer> list, Integer userid,String remark,Integer shopid) {
         //先创建Order对象
         Order order=new Order();
         order.setPrice(getPrice(list));
@@ -50,6 +58,7 @@ public class ShopServiceImp implements ShopService {
         order.setStatus(0);
         order.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date(),"yyyy-MM-dd HH:mm:ss"),"yyyy-MM-dd HH:mm:ss"));
         order.setUserId(userid);
+        order.setShopId(shopid);
         //添加 order
         orderMapper.insert(order);
         //获取 order的id
@@ -59,7 +68,7 @@ public class ShopServiceImp implements ShopService {
             OrderToProduct orderToProduct=new OrderToProduct();
             orderToProduct.setOrderId(id);
             orderToProduct.setProductid(productid);
-            orderToProductMapper.insert(orderToProduct);
+            orderToProductMapper.insertSelective(orderToProduct);
         }
 
         return ServiceResponse.createBysuccessMessage("ok");
@@ -73,9 +82,19 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public ServiceResponse<List<Shop>> getshops() {
+    public ServiceResponse<List<ShopVo>> getshops() {
         List<Shop> list =  shopMapper.selectAll();
-        return ServiceResponse.createBysuccessMessage("ok",list);
+        List<ShopVo> shopVoList=new ArrayList<>();
+        for (Shop shop:list){
+            ShopVo shopVo=new ShopVo();
+            shopVo.setShopId(shop.getShopId());
+            shopVo.setIntro(shop.getIntro());
+            shopVo.setLocation(shop.getLocation());
+            shopVo.setShopname(shop.getShopname());
+            shopVo.setNickname(userMapper.selectByPrimaryKey(shop.getUserId()).getNickname());
+            shopVoList.add(shopVo);
+        }
+        return ServiceResponse.createBysuccessMessage("ok",shopVoList);
     }
 
     @Override
@@ -95,6 +114,65 @@ public class ShopServiceImp implements ShopService {
         return ServiceResponse.createBysuccessMessage("ok");
     }
 
+    @Override
+    public ServiceResponse changeorderstatus(Integer shopid, Integer orderid) {
+        //先校验orderid对不对
+        Order order=orderMapper.selectByPrimaryKey(orderid);
+        if(!order.getShopId().equals(shopid)){
+            return ServiceResponse.createByErrorMessage("id错误");
+        }
+        order.setStatus(1);
+        orderMapper.updateByPrimaryKeySelective(order);
+        return ServiceResponse.createBysuccessMessage("ok");
+    }
+
+    @Override
+    public ServiceResponse collectshop(Integer userid, Integer shopid) {
+        CollectShop collectShop=new CollectShop();
+        collectShop.setShopId(shopid);
+        collectShop.setUserId(userid);
+        collectShopMapper.insertSelective(collectShop);
+        return ServiceResponse.createBysuccessMessage("ok");
+    }
+
+    @Override
+    public ServiceResponse<ShopVo> getshopmsg(Integer shopid) {
+        Shop shop=shopMapper.selectByPrimaryKey(shopid);
+        ShopVo shopVo=new ShopVo();
+        shopVo.setShopname(shop.getShopname());
+        shopVo.setIntro(shop.getIntro());
+        shopVo.setLocation(shop.getLocation());
+        User user=userMapper.selectByPrimaryKey(shop.getUserId());
+        shopVo.setTel(user.getPhone());
+        shopVo.setNickname(user.getNickname());
+        List<Product> products=productMapper.selectByshopid(shop.getShopId());
+        List<ShopProductVo> productVos=new ArrayList<>();
+        for (Product product:products){
+            ShopProductVo shopProductVo=new ShopProductVo();
+            shopProductVo.setPrice(product.getPrice());
+            shopProductVo.setProductId(product.getProductId());
+            shopProductVo.setProductName(product.getProductName());
+            productVos.add(shopProductVo);
+        }
+        shopVo.setMeals(productVos);
+        return ServiceResponse.createBysuccessMessage("ok",shopVo);
+    }
+
+    @Override
+    public ServiceResponse<List<OrderVo>> getmyorder(Integer userid) {
+       List<Order> list = orderMapper.selectOrderbyuserid(userid);
+       List<OrderVo> voList =new ArrayList<>();
+       for(Order order:list){
+           OrderVo orderVo=new OrderVo();
+           orderVo.setStatus(order.getStatus());
+           Shop shop = shopMapper.selectByPrimaryKey(order.getShopId());
+           orderVo.setShopname(shop.getShopname());
+           orderVo.setShoptel(shop.getTel());
+           voList.add(orderVo);
+       }
+        return ServiceResponse.createBysuccessMessage("ok",voList);
+    }
+
     private List<OrderVo> makeOrderVo(List<Order> list) {
         List<OrderVo> listvo=new ArrayList<>();
         for (Order order:list) {
@@ -104,8 +182,15 @@ public class ShopServiceImp implements ShopService {
             orderVo.setPrice(order.getPrice());
             orderVo.setStatus(order.getStatus());
             orderVo.setRemark(order.getRemark());
-            User user = userMapper.selectByPrimaryKey(order.getUserId());
+            User user=userMapper.selectByPrimaryKey(order.getUserId());
             orderVo.setNickname(user.getNickname());
+            orderVo.setPhone(user.getPhone());
+            List<Integer> productids=orderToProductMapper.selectproductbyshopid(order.getOrderId());
+            List<String> productname=new ArrayList<>();
+            for (Product product:productMapper.selectByids(productids)) {
+                productname.add(product.getProductName());
+            }
+            orderVo.setProductname(productname);
             listvo.add(orderVo);
         }
         return listvo;

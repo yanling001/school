@@ -1,23 +1,52 @@
 package com.example.demo.pojo.vo;
 
+import com.example.demo.pojo.Product;
 import com.example.demo.pojo.User;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class OrderVo {
     private Integer orderId;
 
     private Integer status;
-
+    private  String shopname;
     private BigDecimal price;
 
     private Date createTime;
 
     private String nickname;
-    private  String phone;
-
+    private  String phone;//下单用户的电话
+    private String shoptel;
     private String remark;
+     private List <String> productname;
+
+    public String getShoptel() {
+        return shoptel;
+    }
+
+    public void setShoptel(String shoptel) {
+        this.shoptel = shoptel;
+    }
+
+    public String getShopname() {
+        return shopname;
+    }
+
+    public void setShopname(String shopname) {
+        this.shopname = shopname;
+    }
+
+    public List<String> getProductname() {
+        return productname;
+    }
+
+    public void setProductname(List<String> productname) {
+        this.productname = productname;
+    }
 
     public Integer getOrderId() {
         return orderId;

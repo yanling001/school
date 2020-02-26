@@ -144,25 +144,25 @@
   <!--自己定义的放法-->
   <select id="selectOrderid" parameterType="com.example.demo.pojo.Order" resultType="java.lang.Integer">
      SELECT  order_id
-     form userorder
+     from userorder
     <where>
     <if test="status != null">
-      status = #{status,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
     </if>
     <if test="price != null">
-       and price = #{price,jdbcType=DOUBLE},
+       and price = #{price,jdbcType=DOUBLE}
     </if>
     <if test="createTime != null">
-      and create_time = #{createTime,jdbcType=TIMESTAMP},
+      and create_time = #{createTime,jdbcType=TIMESTAMP}
     </if>
     <if test="shopId != null">
-      and shop_id = #{shopId,jdbcType=INTEGER},
+      and shop_id = #{shopId,jdbcType=INTEGER}
     </if>
     <if test="userId != null">
-      and user_id = #{userId,jdbcType=INTEGER},
+      and user_id = #{userId,jdbcType=INTEGER}
     </if>
     <if test="remark != null">
-      and remark = #{remark,jdbcType=LONGVARCHAR},
+      and remark = #{remark,jdbcType=LONGVARCHAR}
     </if>
     </where>
   </select>
@@ -173,5 +173,13 @@
     <include refid="Blob_Column_List" />
     from userorder
     where shop_id = #{shopid,jdbcType=INTEGER}
+  </select>
+  <select id="selectOrderbyuserid" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from userorder
+    where user_id = #{userid,jdbcType=INTEGER}
   </select>
 </mapper>

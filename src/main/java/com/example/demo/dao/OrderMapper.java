@@ -23,4 +23,6 @@ public interface OrderMapper {
     int selectOrderid(Order order);
 
     List<Order> selectOrderbyshopid(Integer shopid);
+
+    List<Order> selectOrderbyuserid(Integer userid);
 }

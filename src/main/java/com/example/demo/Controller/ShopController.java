@@ -8,6 +8,7 @@ import com.example.demo.common.ServiceResponse;
 import com.example.demo.pojo.Product;
 import com.example.demo.pojo.Shop;
 import com.example.demo.pojo.vo.OrderVo;
+import com.example.demo.pojo.vo.ShopVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,17 +35,39 @@ public class ShopController {
       // if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
         return shopService.getorders(shopid);
     }
+    @RequestMapping("/changeorderstatus")//商铺权限
+    public ServiceResponse changeorderstatus(Integer shopid,Integer orderid, HttpServletRequest request){
+        Map<String, Claim> map=(Map<String, Claim>) request.getAttribute("claim");
+        //int role= map.get("role").asInt();
+        // if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
+        return shopService.changeorderstatus(shopid,orderid);
+    }
     @RequestMapping("/addorder")//用户权限
     public  ServiceResponse addOrder(@RequestBody String info){
         JSONObject jsonObject = JSONObject.parseObject(info);
         List<Integer> list=(List<Integer>) jsonObject.get("list");
         Integer userid = jsonObject.getInteger("userid");
+        Integer shopid = jsonObject.getInteger("shopid");
         String remark =  jsonObject.getString("remark");
-        return shopService.addOrder(list,userid,remark);
+        return shopService.addOrder(list,userid,remark,shopid);
     }
+    @RequestMapping("/collectshop")//用户权限
+    public  ServiceResponse collectshop(Integer userid,Integer shopid){
+
+        return shopService.collectshop(userid,shopid);
+    }
+
     @RequestMapping("/getshops")//用户权限
-    public  ServiceResponse<List<Shop>> getshops(){
+    public  ServiceResponse<List<ShopVo>> getshops(){
         return shopService.getshops();
+    }
+    @RequestMapping("/getshopmsg")//用户权限
+    public  ServiceResponse<ShopVo> getshopmsg(Integer shopid){
+        return shopService.getshopmsg(shopid);
+    }
+    @RequestMapping("/getmyorder")//用户权限
+    public  ServiceResponse<List<OrderVo>> getmyorder(Integer userid){
+        return shopService.getmyorder(userid);
     }
     //商铺添加商品
     @RequestMapping("/addproduct")//商铺权限

@@ -35,6 +35,8 @@ public class  SchoolApplicationTests {
     UserMapper userMapper;
     @Autowired
     ProductMapper productMapper;
+    @Autowired
+    ShopMapper shopMapper;
     @Test
     public  void testDao() {
 //        SecondHandProduct secondHandProduct =new SecondHandProduct();
@@ -134,6 +136,10 @@ public class  SchoolApplicationTests {
 //      product.setProductImg("url..");
 //      product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
 //      productMapper.updateByPrimaryKey(product);
-
+        Shop shop=new Shop();
+        shop.setImgstore("url");
+        shop.setIntro("********");
+        shop.setShopId(2);
+        shopMapper.updateByPrimaryKeySelective(shop);
   }
 }
