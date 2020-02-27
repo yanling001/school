@@ -11,12 +11,15 @@ import com.example.demo.pojo.User;
 import com.example.demo.pojo.vo.InvitationVo;
 import com.example.demo.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class InvitationServiceImp implements InvitationService {
@@ -30,8 +33,15 @@ public class InvitationServiceImp implements InvitationService {
     private RedisTemplate redisTemplate;
     @Override
     public ServiceResponse<List<InvitationVo>> getindex() {
-       List<Invitation> list=  invitationMapper.selectAll();
+        String key="invitationlist";
+        ValueOperations<String, List<InvitationVo> > operations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            List<InvitationVo> list=operations.get(key);
+            return  ServiceResponse.createBysuccessMessage("ok",list);
+        }
+        List<Invitation> list=  invitationMapper.selectAll();
         List<InvitationVo> invitationVos = makevo(list);
+        operations.set(key,invitationVos,5, TimeUnit.HOURS);//参数 分别是 key，value，访问超时时间，过期时间
         return  ServiceResponse.createBysuccessMessage("ok",invitationVos);
     }
 

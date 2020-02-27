@@ -4,12 +4,15 @@ import com.example.demo.Service.SecondHandService;
 import com.example.demo.common.ServiceResponse;
 import com.example.demo.dao.*;
 import com.example.demo.pojo.*;
+import com.example.demo.pojo.vo.InvitationVo;
 import com.example.demo.pojo.vo.ProductCommentVo;
 import com.example.demo.pojo.vo.ProductVo;
 import com.example.demo.pojo.vo.SecondHandProductVo;
 import com.example.demo.util.DateTimeUtil;
 import com.example.demo.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +32,16 @@ public class SecondHandServiceImp implements SecondHandService {
     UserMapper userMapper;
     @Autowired
     CollectMapper collectMapper;
+    @Autowired
+    RedisTemplate redisTemplate;
     @Override
     public ServiceResponse<List<SecondHandProductVo>> getproductinfo() {
+        String key="secondproductlist";
+        ValueOperations<String, List<SecondHandProductVo> > operations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            List<SecondHandProductVo> list=operations.get(key);
+            return  ServiceResponse.createBysuccessMessage("ok",list);
+        }
        List<SecondHandProduct> list=secondHandProductMapper.selectAll();
        List<SecondHandProductVo> relist=makevoeasy(list);
         return ServiceResponse.createBysuccessMessage("ok",relist);
