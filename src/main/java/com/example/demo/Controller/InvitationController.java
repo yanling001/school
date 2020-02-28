@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Service.InvitationService;
 import com.example.demo.common.ServiceResponse;
 import com.example.demo.pojo.Invitation;
+import com.example.demo.pojo.User;
 import com.example.demo.pojo.vo.InvitationVo;
+import com.example.demo.pojo.vo.UserVo;
 import com.example.demo.util.DateTimeUtil;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,10 @@ public class InvitationController {
                                             @RequestParam(value = "user_id") Integer user_id) {
         return  invitationService.collect(invitation_id,user_id);
     }
-
+    @RequestMapping("/getuserinfo")
+    @ResponseBody
+    public ServiceResponse<UserVo> getUserinfo(Integer user_id){
+        return  invitationService.getUserinfor(user_id);
+    }
 
 }

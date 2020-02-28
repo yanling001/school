@@ -11,13 +11,17 @@ import com.example.demo.pojo.vo.ShopProductVo;
 import com.example.demo.pojo.vo.ShopVo;
 import com.example.demo.util.BigDecimalUtil;
 import com.example.demo.util.DateTimeUtil;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ShopServiceImp implements ShopService {
@@ -35,10 +39,12 @@ public class ShopServiceImp implements ShopService {
     WeChatMapper weChatMapper;
     @Autowired
     CollectShopMapper collectShopMapper;
+    @Autowired
+    RedisTemplate redisTemplate;
     @Override
     public ServiceResponse addShop(Shop shop) {
-
-
+        String key = "shops";
+       if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
         User user=userMapper.selectByPrimaryKey(shop.getUserId());
         shop.setTel(user.getPhone());
         int k= shopMapper.insert(shop);
@@ -51,6 +57,10 @@ public class ShopServiceImp implements ShopService {
 
     @Override
     public ServiceResponse addOrder(List<Integer> list, Integer userid,String remark,Integer shopid) {
+        String key = "shoporders"+shopid;
+        if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
+        String key1 = "myorders"+userid;
+        if (redisTemplate.hasKey(key1)) redisTemplate.delete(key1);
         //先创建Order对象
         Order order=new Order();
         order.setPrice(getPrice(list));
@@ -76,13 +86,26 @@ public class ShopServiceImp implements ShopService {
 
     @Override
     public ServiceResponse<List<OrderVo>> getorders(Integer shopid) {
+        String key = "shoporders"+shopid;
+        ValueOperations<String,List<OrderVo>> valueOperations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            List<OrderVo> voList = valueOperations.get(key);
+           return  ServiceResponse.createBysuccessMessage("ok",voList);
+        }
         List<Order> list = orderMapper.selectOrderbyshopid(shopid);
         List<OrderVo> voList=makeOrderVo(list);
+        valueOperations.set(key,voList,5, TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",voList);
     }
 
     @Override
     public ServiceResponse<List<ShopVo>> getshops() {
+        String key = "shops";
+        ValueOperations<String,List<ShopVo>> valueOperations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            List<ShopVo> voList = valueOperations.get(key);
+            return  ServiceResponse.createBysuccessMessage("ok",voList);
+        }
         List<Shop> list =  shopMapper.selectAll();
         List<ShopVo> shopVoList=new ArrayList<>();
         for (Shop shop:list){
@@ -94,11 +117,14 @@ public class ShopServiceImp implements ShopService {
             shopVo.setNickname(userMapper.selectByPrimaryKey(shop.getUserId()).getNickname());
             shopVoList.add(shopVo);
         }
+        valueOperations.set(key,shopVoList,5,TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",shopVoList);
     }
 
     @Override
     public ServiceResponse addproduct(Integer shopid, Product product) {
+        String key="shopmsg"+shopid;
+        if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
         product.setShopId(shopid);
         product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         int i=productMapper.insert(product);
@@ -116,8 +142,12 @@ public class ShopServiceImp implements ShopService {
 
     @Override
     public ServiceResponse changeorderstatus(Integer shopid, Integer orderid) {
+        String key = "shoporders"+shopid;
         //先校验orderid对不对
         Order order=orderMapper.selectByPrimaryKey(orderid);
+        String key1 = "myorders"+order.getUserId();
+        if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
+        if (redisTemplate.hasKey(key1)) redisTemplate.delete(key1);
         if(!order.getShopId().equals(shopid)){
             return ServiceResponse.createByErrorMessage("id错误");
         }
@@ -137,6 +167,12 @@ public class ShopServiceImp implements ShopService {
 
     @Override
     public ServiceResponse<ShopVo> getshopmsg(Integer shopid) {
+        String key="shopmsg"+shopid;
+        ValueOperations<String,ShopVo> valueOperations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            ShopVo shopVo = valueOperations.get(key);
+            return ServiceResponse.createBysuccessMessage("ok",shopVo);
+        }
         Shop shop=shopMapper.selectByPrimaryKey(shopid);
         ShopVo shopVo=new ShopVo();
         shopVo.setShopname(shop.getShopname());
@@ -155,21 +191,30 @@ public class ShopServiceImp implements ShopService {
             productVos.add(shopProductVo);
         }
         shopVo.setMeals(productVos);
+        valueOperations.set(key,shopVo,5,TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",shopVo);
     }
 
     @Override
     public ServiceResponse<List<OrderVo>> getmyorder(Integer userid) {
-       List<Order> list = orderMapper.selectOrderbyuserid(userid);
+        String key="myorders"+userid;
+        ValueOperations<String,List<OrderVo>> valueOperations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            List<OrderVo> voList = valueOperations.get(key);
+            return ServiceResponse.createBysuccessMessage("ok",voList);
+        }
+        List<Order> list = orderMapper.selectOrderbyuserid(userid);
        List<OrderVo> voList =new ArrayList<>();
        for(Order order:list){
            OrderVo orderVo=new OrderVo();
            orderVo.setStatus(order.getStatus());
            Shop shop = shopMapper.selectByPrimaryKey(order.getShopId());
            orderVo.setShopname(shop.getShopname());
+           orderVo.setCreateTime(order.getCreateTime());
            orderVo.setShoptel(shop.getTel());
            voList.add(orderVo);
        }
+       valueOperations.set(key,voList,5,TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",voList);
     }
 

@@ -17,8 +17,6 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
-
     User checkUser(@Param("nickname") String nickname, @Param("openid") String openid);
 
-    User selectBywechatname(String zhangsan);
 }

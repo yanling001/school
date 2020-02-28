@@ -135,7 +135,7 @@ public class UserController {
         return (String) jsonObject.get("session_key");
 
     }
-    @RequestMapping("/get")
+    @RequestMapping("/getuserinfo")
     @ResponseBody
     public ServiceResponse<UserVo> getUserinfo(Integer user_id){
          return  userService.getUserinfor(user_id);

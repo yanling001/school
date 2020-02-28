@@ -26,7 +26,7 @@ public class WeChatServiceImp implements WeChatService {
          }
          return  "用户未绑定信息";
         }
-       User user = userMapper.selectBywechatname(weChat.getNickname());
+       User user =new User();
         if(user==null) return   "用户未绑定信息";
         return "添加成功";
     }

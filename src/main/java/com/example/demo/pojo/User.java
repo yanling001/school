@@ -26,11 +26,12 @@ public class User {
     private String avatarurl;
 
     private String openidAnr;
-    private  Integer role;
 
+    private Integer role;
 
+    private Integer gender;
 
-    public User(Integer userId, String nickname, String email, String phone, Date createTime, Date updateTime, String openidWeb, String city, String province, String country, String avatarurl, String openidAnr, Integer role) {
+    public User(Integer userId, String nickname, String email, String phone, Date createTime, Date updateTime, String openidWeb, String city, String province, String country, String avatarurl, String openidAnr, Integer role, Integer gender) {
         this.userId = userId;
         this.nickname = nickname;
         this.email = email;
@@ -43,7 +44,8 @@ public class User {
         this.country = country;
         this.avatarurl = avatarurl;
         this.openidAnr = openidAnr;
-        this.role=role;
+        this.role = role;
+        this.gender = gender;
     }
 
     public User() {
@@ -145,11 +147,20 @@ public class User {
     public void setOpenidAnr(String openidAnr) {
         this.openidAnr = openidAnr == null ? null : openidAnr.trim();
     }
+
     public Integer getRole() {
         return role;
     }
 
     public void setRole(Integer role) {
         this.role = role;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 }

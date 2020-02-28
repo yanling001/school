@@ -9,6 +9,7 @@ import com.example.demo.pojo.Invitation;
 import com.example.demo.pojo.InvitationCollect;
 import com.example.demo.pojo.User;
 import com.example.demo.pojo.vo.InvitationVo;
+import com.example.demo.pojo.vo.UserVo;
 import com.example.demo.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundListOperations;
@@ -98,5 +99,27 @@ public class InvitationServiceImp implements InvitationService {
            invitationVos.add(invitationVo);
        }
        return invitationVos;
+    }
+    @Override
+    public ServiceResponse<UserVo> getUserinfor(Integer userId) {
+        User user=userMapper.selectByPrimaryKey(userId);
+        UserVo userVo = makeUserVo(user);
+        return ServiceResponse.createBysuccessMessage("ok",userVo);
+    }
+    private UserVo makeUserVo(User user) {
+        UserVo userVo=new UserVo();
+        userVo.setUserId(user.getUserId());
+        userVo.setEmail(user.getEmail());
+        userVo.setPhone(user.getPhone());
+        userVo.setUpdateTime(user.getUpdateTime());
+        userVo.setCreateTime(user.getCreateTime());
+        userVo.setCity(user.getCity());
+        userVo.setAvatarurl(user.getAvatarurl());
+        userVo.setCountry(user.getCountry());
+        userVo.setProvince(user.getProvince());
+        userVo.setNickname(user.getNickname());
+        userVo.setAccept(invitationMapper.selectUseraccept(user.getUserId()));
+        userVo.setPublish(invitationMapper.selectUserpublish(user.getUserId()));
+        return  userVo;
     }
 }

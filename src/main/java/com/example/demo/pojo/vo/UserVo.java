@@ -1,10 +1,12 @@
 package com.example.demo.pojo.vo;
 
 import com.example.demo.pojo.Invitation;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 import java.util.List;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class UserVo {
     private Integer userId;
 
@@ -23,13 +25,21 @@ public class UserVo {
     private String province;
 
     private String country;
-
+    private Integer gender;
     private String avatarurl;
 
     //已经接的帖子
     List<Invitation> accept;
     //已发贴子
     List<Invitation> publish;
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 
     public Integer getUserId() {
         return userId;

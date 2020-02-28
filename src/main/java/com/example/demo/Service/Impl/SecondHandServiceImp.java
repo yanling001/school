@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SecondHandServiceImp implements SecondHandService {
@@ -44,6 +45,7 @@ public class SecondHandServiceImp implements SecondHandService {
         }
        List<SecondHandProduct> list=secondHandProductMapper.selectAll();
        List<SecondHandProductVo> relist=makevoeasy(list);
+        operations.set(key,relist,5, TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",relist);
     }
 
@@ -81,7 +83,10 @@ public class SecondHandServiceImp implements SecondHandService {
 
     @Override
     public ServiceResponse addproduct(SecondHandProduct product,List<String> image) {
-
+        String key="secondproductlist";
+        if (redisTemplate.hasKey(key)){
+            redisTemplate.delete(key);
+        }
         product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         product.setStatus(0);
         secondHandProductMapper.insertSelective(product);
@@ -107,6 +112,10 @@ public class SecondHandServiceImp implements SecondHandService {
 
     @Override
     public ServiceResponse comments(ProductComment productComment, List<String> images) {
+        String key="secondproduct"+productComment.getProductId();
+        if (redisTemplate.hasKey(key)){
+            redisTemplate.delete(key);
+        }
         productComment.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         productCommentMapper.insertSelective(productComment);
         int id=productCommentMapper.getcommentid(productComment);
@@ -123,8 +132,16 @@ public class SecondHandServiceImp implements SecondHandService {
 
     @Override
     public ServiceResponse<SecondHandProductVo> getproductinfobyid(Integer id) {
-        ServiceResponse.createBysuccessMessage("ok",makevo(secondHandProductMapper.selectByPrimaryKey(id)));
-        return null;
+        String key="secondproduct"+id;
+        ValueOperations<String,SecondHandProductVo> valueOperations = redisTemplate.opsForValue();
+        if (redisTemplate.hasKey(key)){
+            SecondHandProductVo secondHandProductVo = valueOperations.get(key);
+            return  ServiceResponse.createBysuccessMessage("ok",secondHandProductVo);
+        }
+        SecondHandProductVo makevo = makevo(secondHandProductMapper.selectByPrimaryKey(id));
+        valueOperations.set(key,makevo,5, TimeUnit.HOURS);
+        return  ServiceResponse.createBysuccessMessage("ok",makevo);
+
     }
     //看没有收藏的
     private List<ProductVo> makeProductvo(List<SecondHandProduct> list,Integer userId) {

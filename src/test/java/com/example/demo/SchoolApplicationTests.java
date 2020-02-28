@@ -136,10 +136,12 @@ public class  SchoolApplicationTests {
 //      product.setProductImg("url..");
 //      product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
 //      productMapper.updateByPrimaryKey(product);
-        Shop shop=new Shop();
-        shop.setImgstore("url");
-        shop.setIntro("********");
-        shop.setShopId(2);
-        shopMapper.updateByPrimaryKeySelective(shop);
+//        Shop shop=new Shop();
+//        shop.setImgstore("url");
+//        shop.setIntro("********");
+//        shop.setShopId(2);
+//        shopMapper.updateByPrimaryKeySelective(shop);
+      Date date = DateTimeUtil.strToDate("2020-2-1 2:21:22");
+      System.out.println(DateTimeUtil.dateToStr(date));
   }
 }
