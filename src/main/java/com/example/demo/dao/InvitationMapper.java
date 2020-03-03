@@ -1,6 +1,8 @@
 package com.example.demo.dao;
 
 import com.example.demo.pojo.Invitation;
+import com.example.demo.pojo.InvitationCollect;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +28,6 @@ public interface InvitationMapper {
     List<Invitation> selectUseraccept(Integer userId);
 
     List<Invitation> selectUserpublish(Integer userId);
+
+
 }

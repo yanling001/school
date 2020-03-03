@@ -21,5 +21,5 @@ public interface ShopMapper {
 
     List<Shop> selectAll();
 
-    int selectShopid(Integer shopId);
+    int selectShopid(Shop record);
 }

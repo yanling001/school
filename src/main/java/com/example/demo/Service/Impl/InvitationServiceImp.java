@@ -5,6 +5,7 @@ import com.example.demo.common.ServiceResponse;
 import com.example.demo.dao.InvitationCollectMapper;
 import com.example.demo.dao.InvitationMapper;
 import com.example.demo.dao.UserMapper;
+import com.example.demo.pojo.Collect;
 import com.example.demo.pojo.Invitation;
 import com.example.demo.pojo.InvitationCollect;
 import com.example.demo.pojo.User;
@@ -76,11 +77,15 @@ public class InvitationServiceImp implements InvitationService {
 
     @Override
     public ServiceResponse collect(Integer invitation_id, Integer user_id) {
-        InvitationCollect invitationCollect=new InvitationCollect();
+        InvitationCollect invitationCollect=invitationCollectMapper.selectinvitationCollect(invitation_id,user_id);
+        if (invitationCollect!=null){
+            invitationCollectMapper.deleteByPrimaryKey(invitationCollect.getInvitationCollectId());
+            return ServiceResponse.createBysuccessMessage("收藏已取消");
+        }
         invitationCollect.setInvitationId(invitation_id);
         invitationCollect.setUserId(user_id);
         invitationCollectMapper.insert(invitationCollect);
-        return ServiceResponse.createBysuccessMessage("ok");
+        return ServiceResponse.createBysuccessMessage("收藏成功");
     }
 
     private List<InvitationVo> makevo(List<Invitation> all) {

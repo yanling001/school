@@ -70,4 +70,10 @@
       user_id = #{userId,jdbcType=INTEGER}
     where invitation_collect_id = #{invitationCollectId,jdbcType=INTEGER}
   </update>
+  <select id="selectinvitationCollect" resultMap="BaseResultMap">
+    select   <include refid="Base_Column_List" />
+    from invitation_collect
+    where invitation_id = #{invitationId,jdbcType=INTEGER}
+    and user_id = #{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

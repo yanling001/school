@@ -44,7 +44,7 @@ public class ShopServiceImp implements ShopService {
         shop.setTel(user.getPhone());
         int k= shopMapper.insert(shop);
         if (k<0) return ServiceResponse.createByErrorMessage("error");
-        int shioid=shopMapper.selectShopid(shop.getShopId());
+        int shioid=shopMapper.selectShopid(shop);
         for (String string:list){
             Image image=new Image();
             image.setImgAddress(string);
