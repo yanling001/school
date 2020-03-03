@@ -1,6 +1,8 @@
 package com.example.demo.pojo;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message  implements Serializable {
     String story;
     String time;
     String million;

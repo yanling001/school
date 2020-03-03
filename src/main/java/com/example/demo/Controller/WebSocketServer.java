@@ -4,15 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import com.example.demo.pojo.Message;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -25,13 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 
 @ServerEndpoint(value = "/webSocketOneToOne/{param}")
-
+@EnableScheduling
 public class WebSocketServer {
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount;
     //实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key为用户标识
     private static Map<String, WebSocketServer> connections = new ConcurrentHashMap<>();
-    private static Map<String, List<Message>> msg = new ConcurrentHashMap<>();
+    private static Map<String, Queue<Message>> msg = new ConcurrentHashMap<>();
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
     private String role;
@@ -49,8 +49,8 @@ public class WebSocketServer {
         connections.put(role, this);     //添加到map中
         //判断消息队列
         if (msg.get(role)!=null){
-            for (Message message:msg.get(role)){
-                send(message,role);
+            for (int i=0;i<msg.get(role).size();i++){
+                send(msg.get(role).poll(),role);
             }
         }
         addOnlineCount();               // 在线数加
@@ -97,7 +97,7 @@ public class WebSocketServer {
        else {
            System.out.println(to);
            if(!msg.containsKey(to)){
-               msg.put(to,new ArrayList<Message>());//添加消息队列
+               msg.put(to,new LinkedList<Message>());//添加消息队列
            }
            msg.get(to).add(ms);
        }
@@ -116,7 +116,7 @@ public class WebSocketServer {
         error.printStackTrace();
     }
     //发送给指定角色
-    public void send(Message message, String to) {
+    private static void send(Message message, String to) {
         System.out.println("send  " + message.getStory() + "  " + message.getFrom() + "  " + to);
         try {
             //to指定用户
@@ -148,23 +148,24 @@ public class WebSocketServer {
 
 
     public static synchronized int getOnlineCount() {
-
         return onlineCount;
-
     }
 
-
     public static synchronized void addOnlineCount() {
-
         WebSocketServer.onlineCount++;
-
     }
 
 
     public static synchronized void subOnlineCount() {
-
         WebSocketServer.onlineCount--;
-
+    }
+    @Scheduled(fixedRate=50*1000)
+    private void configureTasks() throws Exception{
+        Message message=new Message();
+        message.setCode(2);
+        for (Map.Entry<String,WebSocketServer> entry:WebSocketServer.connections.entrySet()){
+            WebSocketServer.send(message,entry.getValue().role);
+        }
     }
 
 }

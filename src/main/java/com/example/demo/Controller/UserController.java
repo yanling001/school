@@ -9,6 +9,7 @@ import com.example.demo.pojo.User;
 import com.example.demo.pojo.vo.UserVo;
 import com.example.demo.util.HttpUtil;
 import com.example.demo.util.JWTUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.codehaus.xfire.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private String appid= "wxba447fb7b8387ff2";
-    private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
-   // private String appid= "wx6ed324df0267565f";
-   // private String appsecret="069b310fb741669422d3995cfaf54030";
+//    private String appid= "wxba447fb7b8387ff2";
+//    private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
+    private String appid= "wx6ed324df0267565f";
+    private String appsecret="069b310fb741669422d3995cfaf54030";
     private String openid;
     private String sessionid;
     @Autowired
@@ -53,6 +54,9 @@ public class UserController {
         String  encryptedData =  (String) dataObj.get("encryptedData");
         String  iv =  (String) dataObj.get("iv");
         String sessionkey = getSessionKey(code);
+        if (StringUtils.isEmpty(sessionkey)){
+            return ServiceResponse.createByErrorMessage("code-error");
+        }
         JSONObject userInfo = this.getUserInfo(encryptedData, sessionkey, iv);//JSONObject.parseObject(jsonData);
         System.out.println(userInfo.toJSONString());
         User user=  JSON.parseObject(userInfo.toJSONString(),User.class);
@@ -67,11 +71,17 @@ public class UserController {
              map.put("userid",checkUser.getUserId());
              String token = JWTUtil.sign(user);
              map.put("token",token);
+             if (StringUtils.isEmpty(checkUser.getPhone())){
+                 map.put("warning","未绑定电话");
+             }
              return ServiceResponse.createBysuccessMessage("ok",map);
          }
         String token = JWTUtil.sign(temp);
         map.put("userid",temp.getUserId());
         map.put("token",token);
+        if (StringUtils.isEmpty(temp.getPhone())){
+            map.put("warning","未绑定电话");
+        }
         return ServiceResponse.createBysuccessMessage("ok",map);
     }
     private JSONObject getUserInfo(String encryptedData, String sessionkey, String iv) {

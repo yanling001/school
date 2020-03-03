@@ -19,4 +19,6 @@ public interface CollectMapper {
     int updateByPrimaryKey(Collect record);
 
     int selectCount(@Param("userId") Integer userId,@Param("productId") Integer productId);
+
+    Collect selectcollet(@Param("userId") Integer userId,@Param("productId") Integer productId);
 }

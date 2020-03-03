@@ -1,12 +1,15 @@
 package com.example.demo.Controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.interfaces.Claim;
 import com.example.demo.Service.ShopService;
 import com.example.demo.common.ServiceResponse;
+import com.example.demo.pojo.Order;
 import com.example.demo.pojo.Product;
 import com.example.demo.pojo.Shop;
+import com.example.demo.pojo.vo.OrderNumber;
 import com.example.demo.pojo.vo.OrderVo;
 import com.example.demo.pojo.vo.ShopVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +30,8 @@ public class ShopController {
     @RequestMapping("/addshop")//商铺权限
     public ServiceResponse addshop(@RequestBody String info){
        Shop shop =   JSONObject.parseObject(info,Shop.class);
-        return shopService.addShop(shop);
+       List<String> images=(List<String>)JSONObject.parseObject(info).get("imgstore");
+        return shopService.addShop(shop,images);
     }
     @RequestMapping("/getorders")//商铺权限
     public ServiceResponse<List<OrderVo>> getorders(Integer shopid, HttpServletRequest request){
@@ -45,7 +50,16 @@ public class ShopController {
     @RequestMapping("/addorder")//用户权限
     public  ServiceResponse addOrder(@RequestBody String info){
         JSONObject jsonObject = JSONObject.parseObject(info);
-        List<Integer> list=(List<Integer>) jsonObject.get("list");
+       JSONArray jsonArray = (JSONArray) jsonObject.get("list");
+        List<OrderNumber> list=JSONArray.parseArray(jsonArray.toString(),OrderNumber.class);
+        for (OrderNumber orderNumber:list){
+            System.out.println(orderNumber.getNum());
+        }
+//        List<OrderNumber> orders=new ArrayList<>();
+//        for (String order:list){
+//            OrderNumber temp = JSON.parseObject(order, OrderNumber.class);
+//            orders.add(temp);
+//        }
         Integer userid = jsonObject.getInteger("userid");
         Integer shopid = jsonObject.getInteger("shopid");
         String remark =  jsonObject.getString("remark");

@@ -1,10 +1,11 @@
 package com.example.demo.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 
-public class Invitation {
+public class Invitation  implements Serializable {
     private Integer invitationId;
 
     private Integer uesrId;

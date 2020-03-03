@@ -19,5 +19,7 @@ public interface OrderToProductMapper {
 
     int updateByPrimaryKey(OrderToProduct record);
 
-    List<Integer> selectproductbyshopid(Integer orderId);
+    List<OrderToProduct> selectproductbyshopid(Integer orderId);
+
+    List<OrderToProduct> selectByOrderid(Integer orderId);
 }

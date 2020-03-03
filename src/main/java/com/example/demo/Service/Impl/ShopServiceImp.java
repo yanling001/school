@@ -1,26 +1,19 @@
 package com.example.demo.Service.Impl;
 
-import com.example.demo.Controller.ShopController;
 import com.example.demo.Service.ShopService;
 import com.example.demo.common.ServiceResponse;
 import com.example.demo.dao.*;
 import com.example.demo.pojo.*;
-import com.example.demo.pojo.vo.OrderVo;
-import com.example.demo.pojo.vo.ProductVo;
-import com.example.demo.pojo.vo.ShopProductVo;
-import com.example.demo.pojo.vo.ShopVo;
+import com.example.demo.pojo.vo.*;
 import com.example.demo.util.BigDecimalUtil;
 import com.example.demo.util.DateTimeUtil;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -41,22 +34,33 @@ public class ShopServiceImp implements ShopService {
     CollectShopMapper collectShopMapper;
     @Autowired
     RedisTemplate redisTemplate;
+    @Autowired
+    ImageMapper imageMapper;
     @Override
-    public ServiceResponse addShop(Shop shop) {
+    public ServiceResponse addShop(Shop shop,List<String> list) {
         String key = "shops";
        if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
         User user=userMapper.selectByPrimaryKey(shop.getUserId());
         shop.setTel(user.getPhone());
         int k= shopMapper.insert(shop);
+        if (k<0) return ServiceResponse.createByErrorMessage("error");
+        int shioid=shopMapper.selectShopid(shop.getShopId());
+        for (String string:list){
+            Image image=new Image();
+            image.setImgAddress(string);
+            image.setShopId(shioid);
+            imageMapper.insertSelective(image);
+        }
         user.setRole(1);
         user.setUserId(shop.getUserId());
         userMapper.updateByPrimaryKeySelective(user);
-        if (k>=0) return ServiceResponse.createBysuccessMessage("ok");
-        else  return ServiceResponse.createByErrorMessage("error");
+        return ServiceResponse.createBysuccessMessage("ok");
+
     }
 
     @Override
-    public ServiceResponse addOrder(List<Integer> list, Integer userid,String remark,Integer shopid) {
+    public ServiceResponse addOrder(List<OrderNumber> list, Integer userid, String remark, Integer shopid) {
+      if (list==null||list.size()==0) return ServiceResponse.createByErrorMessage("订单为空");
         String key = "shoporders"+shopid;
         if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
         String key1 = "myorders"+userid;
@@ -74,10 +78,11 @@ public class ShopServiceImp implements ShopService {
         //获取 order的id
         int id=orderMapper.selectOrderid(order);
         //添加ordertoproduct
-        for (Integer productid: list) {
+        for (OrderNumber orderNumber: list) {
             OrderToProduct orderToProduct=new OrderToProduct();
             orderToProduct.setOrderId(id);
-            orderToProduct.setProductid(productid);
+            orderToProduct.setProductid(orderNumber.getId());
+            orderToProduct.setNum(orderNumber.getNum());
             orderToProductMapper.insertSelective(orderToProduct);
         }
 
@@ -114,17 +119,24 @@ public class ShopServiceImp implements ShopService {
             shopVo.setIntro(shop.getIntro());
             shopVo.setLocation(shop.getLocation());
             shopVo.setShopname(shop.getShopname());
+           List<String> images= imageMapper.selectImageByshopid(shop.getShopId());
+            if (images.size()>1){
+                for (int i=1;i<images.size();i++){
+                    images.remove(i);
+                }
+            }
+            shopVo.setPic(images);
             shopVo.setNickname(userMapper.selectByPrimaryKey(shop.getUserId()).getNickname());
             shopVoList.add(shopVo);
         }
-        valueOperations.set(key,shopVoList,5,TimeUnit.HOURS);
+       valueOperations.set(key,shopVoList,5,TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",shopVoList);
     }
 
     @Override
     public ServiceResponse addproduct(Integer shopid, Product product) {
         String key="shopmsg"+shopid;
-        if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
+       if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
         product.setShopId(shopid);
         product.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
         int i=productMapper.insert(product);
@@ -158,11 +170,16 @@ public class ShopServiceImp implements ShopService {
 
     @Override
     public ServiceResponse collectshop(Integer userid, Integer shopid) {
+        CollectShop collectShopt=collectShopMapper.selectcollet(userid,shopid);
+        if (collectShopt!=null){
+            collectShopMapper.deleteByPrimaryKey(collectShopt.getCollectshopId());
+            return ServiceResponse.createBysuccessMessage("收藏已取消");
+        }
         CollectShop collectShop=new CollectShop();
         collectShop.setShopId(shopid);
         collectShop.setUserId(userid);
         collectShopMapper.insertSelective(collectShop);
-        return ServiceResponse.createBysuccessMessage("ok");
+        return ServiceResponse.createBysuccessMessage("收藏成功");
     }
 
     @Override
@@ -181,6 +198,7 @@ public class ShopServiceImp implements ShopService {
         User user=userMapper.selectByPrimaryKey(shop.getUserId());
         shopVo.setTel(user.getPhone());
         shopVo.setNickname(user.getNickname());
+        shopVo.setPic(imageMapper.selectImageByshopid(shopid));
         List<Product> products=productMapper.selectByshopid(shop.getShopId());
         List<ShopProductVo> productVos=new ArrayList<>();
         for (Product product:products){
@@ -202,7 +220,7 @@ public class ShopServiceImp implements ShopService {
         if (redisTemplate.hasKey(key)){
             List<OrderVo> voList = valueOperations.get(key);
             return ServiceResponse.createBysuccessMessage("ok",voList);
-        }
+       }
         List<Order> list = orderMapper.selectOrderbyuserid(userid);
        List<OrderVo> voList =new ArrayList<>();
        for(Order order:list){
@@ -230,22 +248,24 @@ public class ShopServiceImp implements ShopService {
             User user=userMapper.selectByPrimaryKey(order.getUserId());
             orderVo.setNickname(user.getNickname());
             orderVo.setPhone(user.getPhone());
-            List<Integer> productids=orderToProductMapper.selectproductbyshopid(order.getOrderId());
-            List<String> productname=new ArrayList<>();
-            for (Product product:productMapper.selectByids(productids)) {
-                productname.add(product.getProductName());
-            }
-            orderVo.setProductname(productname);
+            List<OrderToProduct> productids=orderToProductMapper.selectByOrderid(order.getOrderId());
+            Map<String,Integer> map=new HashMap<>();
+           for (OrderToProduct orderToProduct:productids){
+               map.put(productMapper.selectByPrimaryKey(orderToProduct.getProductid()).getProductName(),orderToProduct.getNum());
+           }
+            orderVo.setProducts(map);
             listvo.add(orderVo);
         }
         return listvo;
     }
 
-    private BigDecimal getPrice(List<Integer> list) {
-           List<Product>  lists=  productMapper.selectByids(list);
-           BigDecimal price =new BigDecimal(0);
-        for (Product product : lists) {
-            price= BigDecimalUtil.add(price.doubleValue(),product.getPrice().doubleValue());
+    private BigDecimal getPrice(List<OrderNumber> list) {
+        BigDecimal price =new BigDecimal(0);
+        for(OrderNumber orderNumber:list){
+            Product product = productMapper.selectByPrimaryKey(orderNumber.getId());
+            BigDecimal temp =new BigDecimal(product.getPrice().doubleValue());
+            BigDecimal multiply = temp.multiply(new BigDecimal(orderNumber.getNum()));
+            price= BigDecimalUtil.add(price.doubleValue(),multiply.doubleValue());
         }
         return price;
     }

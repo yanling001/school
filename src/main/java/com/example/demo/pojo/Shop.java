@@ -1,6 +1,8 @@
 package com.example.demo.pojo;
 
-public class Shop {
+import java.io.Serializable;
+
+public class Shop  implements Serializable {
     private Integer shopId;
 
     private String category;
@@ -13,18 +15,15 @@ public class Shop {
 
     private Integer userId;
 
-    private String imgstore;
-
     private String intro;
 
-    public Shop(Integer shopId, String category, String shopname, String location, String tel, Integer userId, String imgstore, String intro) {
+    public Shop(Integer shopId, String category, String shopname, String location, String tel, Integer userId, String intro) {
         this.shopId = shopId;
         this.category = category;
         this.shopname = shopname;
         this.location = location;
         this.tel = tel;
         this.userId = userId;
-        this.imgstore = imgstore;
         this.intro = intro;
     }
 
@@ -78,14 +77,6 @@ public class Shop {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getImgstore() {
-        return imgstore;
-    }
-
-    public void setImgstore(String imgstore) {
-        this.imgstore = imgstore == null ? null : imgstore.trim();
     }
 
     public String getIntro() {

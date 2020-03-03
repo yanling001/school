@@ -2,11 +2,12 @@ package com.example.demo.pojo.vo;
 
 import com.example.demo.pojo.User;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-public class ProductVo {
+public class ProductVo  implements Serializable {
     private Integer productId;
 
     private String category;

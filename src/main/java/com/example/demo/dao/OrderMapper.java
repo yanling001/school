@@ -4,6 +4,7 @@ import com.example.demo.pojo.Order;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 @Repository
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer orderId);

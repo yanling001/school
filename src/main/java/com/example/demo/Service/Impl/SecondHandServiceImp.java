@@ -103,11 +103,17 @@ public class SecondHandServiceImp implements SecondHandService {
 
     @Override
     public ServiceResponse collect(Integer userid, Integer productid) {
+        Collect collects=collectMapper.selectcollet(userid,productid);
+       // System.out.println(collects+"  "+userid+productid);
+        if (collects!=null){
+            collectMapper.deleteByPrimaryKey(collects.getCollectId());
+            return ServiceResponse.createBysuccessMessage("收藏已取消");
+        }
         Collect collect=new Collect();
         collect.setProductId(productid);
         collect.setUserId(userid);
         collectMapper.insert(collect);
-        return ServiceResponse.createBysuccessMessage("ok");
+        return ServiceResponse.createBysuccessMessage("收藏成功");
     }
 
     @Override

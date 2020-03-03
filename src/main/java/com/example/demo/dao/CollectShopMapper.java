@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.pojo.CollectShop;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,4 +17,6 @@ public interface CollectShopMapper {
     int updateByPrimaryKeySelective(CollectShop record);
 
     int updateByPrimaryKey(CollectShop record);
+
+    CollectShop selectcollet(@Param("userId") Integer userid,@Param("shopId") Integer shopid);
 }

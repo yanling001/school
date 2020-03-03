@@ -1,97 +1,114 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.demo.dao.ImageMapper" >
-  <resultMap id="BaseResultMap" type="com.example.demo.pojo.Image" >
-    <constructor >
-      <idArg column="image_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="comment_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="product_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="img_address" jdbcType="VARCHAR" javaType="java.lang.String" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.ImageMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.pojo.Image">
+    <constructor>
+      <idArg column="image_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="img_address" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="product_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="comment_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="shop_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List" >
-    image_id, comment_id, product_id, img_address
+  <sql id="Base_Column_List">
+    image_id, img_address, product_id, comment_id, shop_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from image
     where image_id = #{imageId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from image
     where image_id = #{imageId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.example.demo.pojo.Image" >
-    insert into image (image_id, comment_id, product_id, 
-      img_address)
-    values (#{imageId,jdbcType=INTEGER}, #{commentId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{imgAddress,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.example.demo.pojo.Image">
+    insert into image (image_id, img_address, product_id, 
+      comment_id, shop_id)
+    values (#{imageId,jdbcType=INTEGER}, #{imgAddress,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
+      #{commentId,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.demo.pojo.Image" >
+  <insert id="insertSelective" parameterType="com.example.demo.pojo.Image">
     insert into image
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="imageId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
         image_id,
       </if>
-      <if test="commentId != null" >
-        comment_id,
-      </if>
-      <if test="productId != null" >
-        product_id,
-      </if>
-      <if test="imgAddress != null" >
+      <if test="imgAddress != null">
         img_address,
       </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="commentId != null">
+        comment_id,
+      </if>
+      <if test="shopId != null">
+        shop_id,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="imageId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="imageId != null">
         #{imageId,jdbcType=INTEGER},
       </if>
-      <if test="commentId != null" >
-        #{commentId,jdbcType=INTEGER},
+      <if test="imgAddress != null">
+        #{imgAddress,jdbcType=VARCHAR},
       </if>
-      <if test="productId != null" >
+      <if test="productId != null">
         #{productId,jdbcType=INTEGER},
       </if>
-      <if test="imgAddress != null" >
-        #{imgAddress,jdbcType=VARCHAR},
+      <if test="commentId != null">
+        #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.pojo.Image" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.pojo.Image">
     update image
-    <set >
-      <if test="commentId != null" >
-        comment_id = #{commentId,jdbcType=INTEGER},
+    <set>
+      <if test="imgAddress != null">
+        img_address = #{imgAddress,jdbcType=VARCHAR},
       </if>
-      <if test="productId != null" >
+      <if test="productId != null">
         product_id = #{productId,jdbcType=INTEGER},
       </if>
-      <if test="imgAddress != null" >
-        img_address = #{imgAddress,jdbcType=VARCHAR},
+      <if test="commentId != null">
+        comment_id = #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=INTEGER},
       </if>
     </set>
     where image_id = #{imageId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.demo.pojo.Image" >
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.pojo.Image">
     update image
-    set comment_id = #{commentId,jdbcType=INTEGER},
+    set img_address = #{imgAddress,jdbcType=VARCHAR},
       product_id = #{productId,jdbcType=INTEGER},
-      img_address = #{imgAddress,jdbcType=VARCHAR}
+      comment_id = #{commentId,jdbcType=INTEGER},
+      shop_id = #{shopId,jdbcType=INTEGER}
     where image_id = #{imageId,jdbcType=INTEGER}
   </update>
   <!--自己定义的放法-->
-  <select id="selectImageByproductid" resultType="java.lang.String" parameterType="java.lang.Integer" >
+  <select id="selectImageByproductid" parameterType="java.lang.Integer" resultType="java.lang.String">
     select
     img_address
     from image
     where  product_id = #{productId,jdbcType=INTEGER}
   </select>
-  <select id="selectImageBycommentid" resultType="java.lang.String" parameterType="java.lang.Integer" >
+  <select id="selectImageBycommentid" parameterType="java.lang.Integer" resultType="java.lang.String">
     select
     img_address
     from image
     where  comment_id = #{commentId,jdbcType=INTEGER}
+  </select>
+  <select id="selectImageByshopid" parameterType="java.lang.Integer" resultType="java.lang.String">
+     select
+    img_address
+    from image
+    where  shop_id = #{shopId,jdbcType=INTEGER}
   </select>
 </mapper>

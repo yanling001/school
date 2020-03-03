@@ -1,9 +1,10 @@
 package com.example.demo.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Product {
+public class Product  implements Serializable {
     private Integer productId;
 
     private BigDecimal price;

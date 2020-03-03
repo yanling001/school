@@ -1,9 +1,10 @@
 package com.example.demo.pojo.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class ShopProductVo {
+public class ShopProductVo  implements Serializable {
     private Integer productId;
 
     private BigDecimal price;

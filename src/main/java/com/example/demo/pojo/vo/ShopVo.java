@@ -3,10 +3,11 @@ package com.example.demo.pojo.vo;
 import com.example.demo.pojo.Product;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class ShopVo {
+public class ShopVo implements Serializable {
     private Integer shopId;
 
     private String shopname;
@@ -15,7 +16,16 @@ public class ShopVo {
     private String nickname;
     private String tel;
     private String intro;
+    private   List<String> pic;
     private List<ShopProductVo> meals;
+
+    public List<String> getPic() {
+        return pic;
+    }
+
+    public void setPic(List<String> pic) {
+        this.pic = pic;
+    }
 
     public String getTel() {
         return tel;

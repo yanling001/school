@@ -22,4 +22,6 @@ public interface ImageMapper {
     List<String> selectImageByproductid(Integer productId);
 
     List<String> selectImageBycommentid(Integer commentId);
+
+    List<String> selectImageByshopid(Integer shopId);
 }

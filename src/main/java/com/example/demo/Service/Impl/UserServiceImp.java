@@ -21,11 +21,10 @@ public class UserServiceImp implements UserService {
     @Override
     public ServiceResponse<UserVo> getUserinfor(Integer userId) {
         User user=userMapper.selectByPrimaryKey(userId);
+        if (user==null) return ServiceResponse.createByError();
         UserVo userVo = makeUserVo(user);
-       if (user!=null)
+
         return ServiceResponse.createBysuccessMessage("ok",userVo);
-       else
-           return ServiceResponse.createByError();
     }
 
     private UserVo makeUserVo(User user) {

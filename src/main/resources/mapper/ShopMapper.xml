@@ -9,12 +9,11 @@
       <arg column="location" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="tel" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="imgstore" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="intro" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    shop_id, category, shopname, location, tel, user_id, imgstore, intro
+    shop_id, category, shopname, location, tel, user_id, intro
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -29,10 +28,10 @@
   <insert id="insert" parameterType="com.example.demo.pojo.Shop">
     insert into shop (shop_id, category, shopname, 
       location, tel, user_id, 
-      imgstore, intro)
+      intro)
     values (#{shopId,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{shopname,jdbcType=VARCHAR}, 
       #{location,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
-      #{imgstore,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR})
+      #{intro,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.demo.pojo.Shop">
     insert into shop
@@ -54,9 +53,6 @@
       </if>
       <if test="userId != null">
         user_id,
-      </if>
-      <if test="imgstore != null">
-        imgstore,
       </if>
       <if test="intro != null">
         intro,
@@ -81,9 +77,6 @@
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="imgstore != null">
-        #{imgstore,jdbcType=VARCHAR},
-      </if>
       <if test="intro != null">
         #{intro,jdbcType=VARCHAR},
       </if>
@@ -107,9 +100,6 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="imgstore != null">
-        imgstore = #{imgstore,jdbcType=VARCHAR},
-      </if>
       <if test="intro != null">
         intro = #{intro,jdbcType=VARCHAR},
       </if>
@@ -123,7 +113,6 @@
       location = #{location,jdbcType=VARCHAR},
       tel = #{tel,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
-      imgstore = #{imgstore,jdbcType=VARCHAR},
       intro = #{intro,jdbcType=VARCHAR}
     where shop_id = #{shopId,jdbcType=INTEGER}
   </update>
@@ -133,6 +122,30 @@
     select
     <include refid="Base_Column_List" />
     from shop
+  </select>
+  <select id="selectShopid" parameterType="com.example.demo.pojo.Shop" resultType="java.lang.Integer">
+    select  shop_id
+    from shop
+    <where>
+      <if test="category != null">
+         category = #{category,jdbcType=VARCHAR}
+      </if>
+      <if test="shopname != null">
+        and shopname = #{shopname,jdbcType=VARCHAR}
+      </if>
+      <if test="location != null">
+        and location = #{location,jdbcType=VARCHAR}
+      </if>
+      <if test="tel != null">
+        and tel = #{tel,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="intro != null">
+        and intro = #{intro,jdbcType=VARCHAR}
+      </if>
+    </where>
   </select>
 
 </mapper>

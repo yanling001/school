@@ -2,12 +2,13 @@ package com.example.demo.pojo.vo;
 import com.example.demo.pojo.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class SecondHandProductVo {
+public class SecondHandProductVo  implements Serializable {
     /*
      “tel”：xxx	//电话号码
      “qq”：xxx	//qq号

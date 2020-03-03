@@ -2,10 +2,11 @@ package com.example.demo.pojo.vo;
 
 import com.example.demo.pojo.User;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ProductCommentVo {
+public class ProductCommentVo  implements Serializable {
     private Integer commentId;
 
     private Integer productId;

@@ -7,10 +7,13 @@ public class OrderToProduct {
 
     private Integer productid;
 
-    public OrderToProduct(Integer id, Integer orderId, Integer productid) {
+    private Integer num;
+
+    public OrderToProduct(Integer id, Integer orderId, Integer productid, Integer num) {
         this.id = id;
         this.orderId = orderId;
         this.productid = productid;
+        this.num = num;
     }
 
     public OrderToProduct() {
@@ -39,5 +42,13 @@ public class OrderToProduct {
 
     public void setProductid(Integer productid) {
         this.productid = productid;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }

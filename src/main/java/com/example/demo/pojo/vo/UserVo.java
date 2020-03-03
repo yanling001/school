@@ -3,11 +3,12 @@ package com.example.demo.pojo.vo;
 import com.example.demo.pojo.Invitation;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class UserVo {
+public class UserVo  implements Serializable {
     private Integer userId;
 
 

@@ -2,9 +2,10 @@ package com.example.demo.pojo.vo;
 
 import io.swagger.annotations.ApiModel;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-public class InvitationVo {
+public class InvitationVo implements Serializable {
     private  Integer id;
     private String person;
     private String head;

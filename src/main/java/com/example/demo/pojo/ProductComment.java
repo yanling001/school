@@ -1,8 +1,9 @@
 package com.example.demo.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProductComment {
+public class ProductComment  implements Serializable {
     private Integer commentId;
 
     private Integer productId;

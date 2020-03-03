@@ -91,8 +91,8 @@ public class  SchoolApplicationTests {
     private RedisTemplate redisTemplate;
   @Test
     public  void redis(){
-      //String key = "productcategory"+1;
-      //System.out.println(redisTemplate.hasKey(key));
+      String key = "productcategory"+1;
+      System.out.println(redisTemplate.hasKey(key));
 //      Map<String,Object> map=new HashMap<>();
 //      map.put("p",1);
 //      map.put("content","tset");
@@ -141,7 +141,7 @@ public class  SchoolApplicationTests {
 //        shop.setIntro("********");
 //        shop.setShopId(2);
 //        shopMapper.updateByPrimaryKeySelective(shop);
-      Date date = DateTimeUtil.strToDate("2020-2-1 2:21:22");
-      System.out.println(DateTimeUtil.dateToStr(date));
+//      Date date = DateTimeUtil.strToDate("2020-2-1 2:21:22");
+//      System.out.println(DateTimeUtil.dateToStr(date));
   }
 }

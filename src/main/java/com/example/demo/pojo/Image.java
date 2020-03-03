@@ -3,17 +3,20 @@ package com.example.demo.pojo;
 public class Image {
     private Integer imageId;
 
-    private Integer commentId;
+    private String imgAddress;
 
     private Integer productId;
 
-    private String imgAddress;
+    private Integer commentId;
 
-    public Image(Integer imageId, Integer commentId, Integer productId, String imgAddress) {
+    private Integer shopId;
+
+    public Image(Integer imageId, String imgAddress, Integer productId, Integer commentId, Integer shopId) {
         this.imageId = imageId;
-        this.commentId = commentId;
-        this.productId = productId;
         this.imgAddress = imgAddress;
+        this.productId = productId;
+        this.commentId = commentId;
+        this.shopId = shopId;
     }
 
     public Image() {
@@ -28,12 +31,12 @@ public class Image {
         this.imageId = imageId;
     }
 
-    public Integer getCommentId() {
-        return commentId;
+    public String getImgAddress() {
+        return imgAddress;
     }
 
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
+    public void setImgAddress(String imgAddress) {
+        this.imgAddress = imgAddress == null ? null : imgAddress.trim();
     }
 
     public Integer getProductId() {
@@ -44,11 +47,19 @@ public class Image {
         this.productId = productId;
     }
 
-    public String getImgAddress() {
-        return imgAddress;
+    public Integer getCommentId() {
+        return commentId;
     }
 
-    public void setImgAddress(String imgAddress) {
-        this.imgAddress = imgAddress == null ? null : imgAddress.trim();
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 }
