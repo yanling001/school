@@ -75,4 +75,9 @@
      from
     collectshop where shop_id=  #{shopId,jdbcType=INTEGER} and user_id=#{userId,jdbcType=INTEGER}
   </select>
+  <select id="selectUsercollet" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select   shop_id
+    from
+    collectshop where  user_id=#{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

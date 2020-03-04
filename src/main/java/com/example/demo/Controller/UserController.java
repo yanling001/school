@@ -150,4 +150,9 @@ public class UserController {
     public ServiceResponse<UserVo> getUserinfo(Integer user_id){
          return  userService.getUserinfor(user_id);
     }
+    @RequestMapping("/updateuserinfo")
+    @ResponseBody
+    public  ServiceResponse updateuserinfo(@RequestBody User user){
+        return  userService.updateUserinfo(user);
+    }
 }

@@ -6,4 +6,6 @@ import com.example.demo.pojo.vo.UserVo;
 
 public interface UserService {
   ServiceResponse<UserVo> getUserinfor(Integer userId);
+
+  ServiceResponse updateUserinfo(User user);
 }

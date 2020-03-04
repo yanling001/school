@@ -27,6 +27,12 @@ public class UserServiceImp implements UserService {
         return ServiceResponse.createBysuccessMessage("ok",userVo);
     }
 
+    @Override
+    public ServiceResponse updateUserinfo(User user) {
+        userMapper.updateByPrimaryKeySelective(user);
+        return ServiceResponse.createBysuccessMessage("0k");
+    }
+
     private UserVo makeUserVo(User user) {
         UserVo userVo =new UserVo();
         userVo.setNickname(user.getNickname());

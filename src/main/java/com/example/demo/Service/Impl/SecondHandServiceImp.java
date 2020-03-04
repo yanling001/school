@@ -39,10 +39,10 @@ public class SecondHandServiceImp implements SecondHandService {
     public ServiceResponse<List<SecondHandProductVo>> getproductinfo() {
         String key="secondproductlist";
         ValueOperations<String, List<SecondHandProductVo> > operations = redisTemplate.opsForValue();
-        if (redisTemplate.hasKey(key)){
-            List<SecondHandProductVo> list=operations.get(key);
-            return  ServiceResponse.createBysuccessMessage("ok",list);
-        }
+//        if (redisTemplate.hasKey(key)){
+//            List<SecondHandProductVo> list=operations.get(key);
+//            return  ServiceResponse.createBysuccessMessage("ok",list);
+//        }
        List<SecondHandProduct> list=secondHandProductMapper.selectAll();
        List<SecondHandProductVo> relist=makevoeasy(list);
         operations.set(key,relist,5, TimeUnit.HOURS);
@@ -63,6 +63,8 @@ public class SecondHandServiceImp implements SecondHandService {
             secondHandProductVo.setLocation(secondHandProduct.getLocation());
             secondHandProductVo.setNewDegree(secondHandProduct.getNewDegree());
             User user=userMapper.selectByPrimaryKey(secondHandProduct.getUserId());
+            secondHandProductVo.setUserhead(user.getAvatarurl());
+            secondHandProductVo.setUserId(user.getUserId());
             secondHandProductVo.setName(user.getNickname());
             secondHandProductVo.setTel(user.getPhone());
             secondHandProductVo.setQq(user.getEmail());
@@ -140,15 +142,31 @@ public class SecondHandServiceImp implements SecondHandService {
     public ServiceResponse<SecondHandProductVo> getproductinfobyid(Integer id) {
         String key="secondproduct"+id;
         ValueOperations<String,SecondHandProductVo> valueOperations = redisTemplate.opsForValue();
-        if (redisTemplate.hasKey(key)){
-            SecondHandProductVo secondHandProductVo = valueOperations.get(key);
-            return  ServiceResponse.createBysuccessMessage("ok",secondHandProductVo);
-        }
-        SecondHandProductVo makevo = makevo(secondHandProductMapper.selectByPrimaryKey(id));
+//        if (redisTemplate.hasKey(key)){
+//            SecondHandProductVo secondHandProductVo = valueOperations.get(key);
+//            return  ServiceResponse.createBysuccessMessage("ok",secondHandProductVo);
+//        }
+        SecondHandProduct secondHandProduct = secondHandProductMapper.selectByPrimaryKey(id);
+        if (secondHandProduct==null) return ServiceResponse.createByErrorMessage("id错误");
+        SecondHandProductVo makevo = makevo(secondHandProduct);
         valueOperations.set(key,makevo,5, TimeUnit.HOURS);
         return  ServiceResponse.createBysuccessMessage("ok",makevo);
 
     }
+
+    @Override
+    public ServiceResponse<List<SecondHandProductVo>> getcollectproduct(Integer userId) {
+        if (userId==null) return ServiceResponse.createByErrorMessage("id错误");
+       List<Integer> productids = collectMapper.selectcolletbyuserid(userId);
+        List<SecondHandProduct> secondHandProducts=new ArrayList<>();
+       for (Integer productid:productids){
+           SecondHandProduct secondHandProduct =  secondHandProductMapper.selectByPrimaryKey(productid);
+           secondHandProducts.add(secondHandProduct);
+       }
+        List<SecondHandProductVo> makevoeasy = makevoeasy(secondHandProducts);
+        return ServiceResponse.createBysuccessMessage("ok",makevoeasy);
+    }
+
     //看没有收藏的
     private List<ProductVo> makeProductvo(List<SecondHandProduct> list,Integer userId) {
         List<ProductVo> relist=new ArrayList<>();
@@ -206,6 +224,7 @@ public class SecondHandServiceImp implements SecondHandService {
              User user=userMapper.selectByPrimaryKey(productComment.getUserId());
              productCommentVo.setUser(user.getNickname());
              productCommentVo.setHeadimage(user.getAvatarurl());
+             productCommentVo.setUserId(user.getUserId());
             relist.add(productCommentVo);
         }
         return  relist;

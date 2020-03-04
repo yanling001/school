@@ -22,4 +22,6 @@ public interface SecondHandService {
     ServiceResponse comments(ProductComment productComment,List<String> images);
 
     ServiceResponse<SecondHandProductVo> getproductinfobyid(Integer id);
+
+    ServiceResponse<List<SecondHandProductVo>> getcollectproduct(Integer userId);
 }

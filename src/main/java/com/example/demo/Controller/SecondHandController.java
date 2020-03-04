@@ -8,6 +8,7 @@ import com.example.demo.pojo.ProductComment;
 import com.example.demo.pojo.SecondHandProduct;
 import com.example.demo.pojo.vo.ProductVo;
 import com.example.demo.pojo.vo.SecondHandProductVo;
+import com.example.demo.pojo.vo.ShopVo;
 import com.example.demo.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,12 @@ public class SecondHandController {
     @RequestMapping("/merchandiseList")
     public ServiceResponse<List<SecondHandProductVo>> getproductinfo(){
         return secondHandService.getproductinfo();
+    }
+
+    //获取用户收藏的二手商品
+    @RequestMapping("/getcollectproduct")
+    public  ServiceResponse<List<SecondHandProductVo>> getcollectproduct(Integer userId){
+        return secondHandService.getcollectproduct(userId);
     }
     //当前用户获取二手产品信息看当前用户有没有收藏
     @RequestMapping("/product")

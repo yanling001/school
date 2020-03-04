@@ -15,7 +15,7 @@ public interface ShopService {
 
     ServiceResponse addOrder(List<OrderNumber> list, Integer userid, String remark, Integer shopid);
 
-    ServiceResponse<List<OrderVo>> getorders(Integer shopid);
+    ServiceResponse<List<OrderVo>> getorders(Integer shopid,Integer status);
 
     ServiceResponse<List<ShopVo>> getshops();
 
@@ -30,4 +30,8 @@ public interface ShopService {
     ServiceResponse<ShopVo> getshopmsg(Integer shopid);
 
     ServiceResponse<List<OrderVo>> getmyorder(Integer userid);
+
+    ServiceResponse<List<ShopVo>> getcollectshop(Integer userId);
+
+    ServiceResponse<Shop> getshopinfo(Integer userId);
 }

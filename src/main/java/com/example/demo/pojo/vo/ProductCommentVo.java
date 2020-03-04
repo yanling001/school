@@ -10,7 +10,7 @@ public class ProductCommentVo  implements Serializable {
     private Integer commentId;
 
     private Integer productId;
-
+    private  Integer userId;
     private String user;
    private  String headimage;
     private Date createTime;
@@ -19,6 +19,14 @@ public class ProductCommentVo  implements Serializable {
 
     private String content;
     private List<String> images;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public String getUser() {
         return user;

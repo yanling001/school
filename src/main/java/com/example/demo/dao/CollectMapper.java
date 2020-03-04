@@ -4,6 +4,8 @@ import com.example.demo.pojo.Collect;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CollectMapper {
     int deleteByPrimaryKey(Integer collectId);
@@ -21,4 +23,6 @@ public interface CollectMapper {
     int selectCount(@Param("userId") Integer userId,@Param("productId") Integer productId);
 
     Collect selectcollet(@Param("userId") Integer userId,@Param("productId") Integer productId);
+
+    List<Integer> selectcolletbyuserid(Integer userId);
 }

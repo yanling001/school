@@ -1,13 +1,15 @@
 package com.example.demo.pojo.vo;
 import com.example.demo.pojo.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.models.auth.In;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+//@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class SecondHandProductVo  implements Serializable {
     /*
      “tel”：xxx	//电话号码
@@ -19,9 +21,11 @@ public class SecondHandProductVo  implements Serializable {
 
 
     private Integer productId;
+    private Integer userId;
     private String title;//对应商品的name
     private String name;//用户的name
     private  String qq;
+    private  String userhead;
     private String tel;
     private Date createTime;
     private BigDecimal price;
@@ -32,6 +36,22 @@ public class SecondHandProductVo  implements Serializable {
     private String location;
     private List<String> images;
     private  List<ProductCommentVo> comments;//二手商品评论
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserhead() {
+        return userhead;
+    }
+
+    public void setUserhead(String userhead) {
+        this.userhead = userhead;
+    }
 
     public String getQq() {
         return qq;

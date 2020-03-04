@@ -90,17 +90,28 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public ServiceResponse<List<OrderVo>> getorders(Integer shopid) {
+    public ServiceResponse<List<OrderVo>> getorders(Integer shopid,Integer status) {
         String key = "shoporders"+shopid;
+        List<OrderVo> ans = new ArrayList<>();
         ValueOperations<String,List<OrderVo>> valueOperations = redisTemplate.opsForValue();
         if (redisTemplate.hasKey(key)){
             List<OrderVo> voList = valueOperations.get(key);
-           return  ServiceResponse.createBysuccessMessage("ok",voList);
+            for (OrderVo orderVo: voList){
+                if (orderVo.getStatus()==status){
+                    ans.add(orderVo);
+                }
+            }
+           return  ServiceResponse.createBysuccessMessage("ok",ans);
         }
         List<Order> list = orderMapper.selectOrderbyshopid(shopid);
         List<OrderVo> voList=makeOrderVo(list);
         valueOperations.set(key,voList,5, TimeUnit.HOURS);
-        return ServiceResponse.createBysuccessMessage("ok",voList);
+        for (OrderVo orderVo: voList){
+            if (orderVo.getStatus()==status){
+                ans.add(orderVo);
+            }
+        }
+        return ServiceResponse.createBysuccessMessage("ok",ans);
     }
 
     @Override
@@ -234,6 +245,33 @@ public class ShopServiceImp implements ShopService {
        }
        valueOperations.set(key,voList,5,TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",voList);
+    }
+
+    @Override
+    public ServiceResponse<List<ShopVo>> getcollectshop(Integer userId) {
+        if (userId==null) return ServiceResponse.createByErrorMessage("参数错误");
+        List<Integer> shops = collectShopMapper.selectUsercollet(userId);
+        List<ShopVo> shopVos =new ArrayList<>();
+        for (Integer shopid: shops) {
+            Shop shop=shopMapper.selectByPrimaryKey(shopid);
+            ShopVo shopVo = new ShopVo();
+            shopVo.setShopname(shop.getShopname());
+            shopVo.setShopId(shop.getShopId());
+            shopVo.setTel(shop.getTel());
+            shopVo.setIntro(shop.getIntro());
+            shopVo.setLocation(shopVo.getLocation());
+            shopVo.setNickname(userMapper.selectByPrimaryKey(shop.getUserId()).getNickname());
+         shopVos.add(shopVo);
+        }
+        return ServiceResponse.createBysuccessMessage("ok",shopVos);
+    }
+
+    @Override
+    public ServiceResponse<Shop> getshopinfo(Integer userId) {
+        if (userId==null) return ServiceResponse.createByErrorMessage("id错误");
+        Shop shop = shopMapper.selectByuserid(userId);
+        if (shop==null) return ServiceResponse.createByErrorMessage("用户没有商铺信息");
+        return ServiceResponse.createBysuccessMessage("ok",shop);
     }
 
     private List<OrderVo> makeOrderVo(List<Order> list) {

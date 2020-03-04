@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.interfaces.Claim;
 import com.example.demo.Service.ShopService;
 import com.example.demo.common.ServiceResponse;
-import com.example.demo.pojo.Order;
 import com.example.demo.pojo.Product;
 import com.example.demo.pojo.Shop;
 import com.example.demo.pojo.vo.OrderNumber;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +32,24 @@ public class ShopController {
        List<String> images=(List<String>)JSONObject.parseObject(info).get("imgstore");
         return shopService.addShop(shop,images);
     }
+
+    //根据用户的id获取shop信息
+    @RequestMapping("getshopinfo")
+    public  ServiceResponse<Shop> getshopinfo(Integer userId){
+        return  shopService.getshopinfo(userId);
+    }
+
+    //获取用户收藏的shop
+    @RequestMapping("getcollectshop")
+    public  ServiceResponse<List<ShopVo>> getcollectshop(Integer userId){
+      return   shopService.getcollectshop(userId);
+    }
     @RequestMapping("/getorders")//商铺权限
-    public ServiceResponse<List<OrderVo>> getorders(Integer shopid, HttpServletRequest request){
+    public ServiceResponse<List<OrderVo>> getorders(Integer shopid,Integer status, HttpServletRequest request){
         Map<String, Claim> map=(Map<String, Claim>) request.getAttribute("claim");
        //int role= map.get("role").asInt();
       // if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
-        return shopService.getorders(shopid);
+        return shopService.getorders(shopid,status);
     }
     @RequestMapping("/changeorderstatus")//商铺权限
     public ServiceResponse changeorderstatus(Integer shopid,Integer orderid, HttpServletRequest request){
@@ -101,4 +112,5 @@ public class ShopController {
       //  if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
         return shopService.update(shopid,product);
     }
+
 }
