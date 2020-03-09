@@ -29,6 +29,9 @@ public class SecondHandController {
     //获取二手手信息
     @RequestMapping("/msg")
     public ServiceResponse<SecondHandProductVo> getproductinfobyid(Integer id){
+        if (id==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
         return secondHandService.getproductinfobyid(id);
     }
     @RequestMapping("/merchandiseList")
@@ -39,12 +42,16 @@ public class SecondHandController {
     //获取用户收藏的二手商品
     @RequestMapping("/getcollectproduct")
     public  ServiceResponse<List<SecondHandProductVo>> getcollectproduct(Integer userId){
+        if (userId==null){
+            return ServiceResponse.createByErrorMessage("参数错误");
+        }
         return secondHandService.getcollectproduct(userId);
     }
     //当前用户获取二手产品信息看当前用户有没有收藏
     @RequestMapping("/product")
     public  ServiceResponse<List<ProductVo>> getproduct(Integer userId){
-       return secondHandService.getproduct(userId);
+       if (userId==null) return ServiceResponse.createByErrorMessage("参数错误");
+        return secondHandService.getproduct(userId);
     }
     //添加二手商品
     @RequestMapping("/addproduct")
@@ -71,6 +78,9 @@ public class SecondHandController {
    //收藏二手产品
     @RequestMapping("/collect")
     public  ServiceResponse collect(Integer userid,Integer productid){
+        if (userid==null||productid==null){
+            return ServiceResponse.createByErrorMessage("参数错误");
+        }
        return  secondHandService.collect(userid,productid);
 
     }

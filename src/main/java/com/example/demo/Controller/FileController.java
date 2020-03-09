@@ -17,6 +17,9 @@ public class FileController {
     @RequestMapping("/upload")
     @ResponseBody
     public ServiceResponse<List<String>> upload( MultipartFile[] file){
+        if (file==null||file.length==0){
+            return ServiceResponse.createByErrorMessage("请选择上传文件");
+        }
         List<String> list=new ArrayList<>();
         for (MultipartFile multipartFile:file){
             String uplod = FileUtil.uplod(multipartFile);

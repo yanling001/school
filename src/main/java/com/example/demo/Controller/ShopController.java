@@ -36,12 +36,18 @@ public class ShopController {
     //根据用户的id获取shop信息
     @RequestMapping("getshopinfo")
     public  ServiceResponse<Shop> getshopinfo(Integer userId){
+        if (userId==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
         return  shopService.getshopinfo(userId);
     }
 
     //获取用户收藏的shop
     @RequestMapping("getcollectshop")
     public  ServiceResponse<List<ShopVo>> getcollectshop(Integer userId){
+        if (userId==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
       return   shopService.getcollectshop(userId);
     }
     @RequestMapping("/getorders")//商铺权限
@@ -49,6 +55,9 @@ public class ShopController {
         Map<String, Claim> map=(Map<String, Claim>) request.getAttribute("claim");
        //int role= map.get("role").asInt();
       // if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
+        if (shopid==null||status==null){
+            return ServiceResponse.createByErrorMessage("参数错误");
+        }
         return shopService.getorders(shopid,status);
     }
     @RequestMapping("/changeorderstatus")//商铺权限
@@ -56,6 +65,9 @@ public class ShopController {
         Map<String, Claim> map=(Map<String, Claim>) request.getAttribute("claim");
         //int role= map.get("role").asInt();
         // if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
+        if (shopid==null||orderid==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
         return shopService.changeorderstatus(shopid,orderid);
     }
     @RequestMapping("/addorder")//用户权限
@@ -88,10 +100,16 @@ public class ShopController {
     }
     @RequestMapping("/getshopmsg")//用户权限
     public  ServiceResponse<ShopVo> getshopmsg(Integer shopid){
+        if (shopid==null){
+            return ServiceResponse.createByErrorMessage("参数错误");
+        }
         return shopService.getshopmsg(shopid);
     }
     @RequestMapping("/getmyorder")//用户权限
     public  ServiceResponse<List<OrderVo>> getmyorder(Integer userid){
+        if (userid==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
         return shopService.getmyorder(userid);
     }
     //商铺添加商品
@@ -102,11 +120,14 @@ public class ShopController {
       //  if (role!=1) return ServiceResponse.createByErrorMessage("无权限");
        Product product = JSONObject.parseObject(info,Product.class);
         Integer shopid = JSON.parseObject(info).getInteger("shopid");
+        if (shopid==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
         return shopService.addproduct(shopid,product);
     }
     //商铺修改商品
     @RequestMapping("/updateproduct")//商铺权限
-    public  ServiceResponse update(Integer shopid,Product product,HttpServletRequest request){
+    public  ServiceResponse update(Integer shopid, Product product,HttpServletRequest request){
         Map<String, Claim> map=(Map<String, Claim>) request.getAttribute("claim");
        // int role= map.get("role").asInt();
       //  if (role!=1) return ServiceResponse.createByErrorMessage("无权限");

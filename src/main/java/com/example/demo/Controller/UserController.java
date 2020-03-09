@@ -148,11 +148,17 @@ public class UserController {
     @RequestMapping("/getuserinfo")
     @ResponseBody
     public ServiceResponse<UserVo> getUserinfo(Integer user_id){
-         return  userService.getUserinfor(user_id);
+        if (user_id==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
+        return  userService.getUserinfor(user_id);
     }
     @RequestMapping("/updateuserinfo")
     @ResponseBody
     public  ServiceResponse updateuserinfo(@RequestBody User user){
+        if (user.getUserId()==null||user.getPhone()==null){
+            return  ServiceResponse.createByErrorMessage("参数错误");
+        }
         return  userService.updateUserinfo(user);
     }
 }
