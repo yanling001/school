@@ -33,5 +33,5 @@ public interface ShopService {
 
     ServiceResponse<List<ShopVo>> getcollectshop(Integer userId);
 
-    ServiceResponse<Shop> getshopinfo(Integer userId);
+    ServiceResponse< List<Shop>> getshopinfo(Integer userId);
 }

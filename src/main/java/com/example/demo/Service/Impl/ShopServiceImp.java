@@ -42,6 +42,7 @@ public class ShopServiceImp implements ShopService {
        if (redisTemplate.hasKey(key)) redisTemplate.delete(key);
         User user=userMapper.selectByPrimaryKey(shop.getUserId());
         shop.setTel(user.getPhone());
+        shop.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date(),"yyyy-MM-dd HH:mm:ss"),"yyyy-MM-dd HH:mm:ss"));
         int k= shopMapper.insert(shop);
         if (k<0) return ServiceResponse.createByErrorMessage("error");
         int shioid=shopMapper.selectShopid(shop);
@@ -93,16 +94,16 @@ public class ShopServiceImp implements ShopService {
     public ServiceResponse<List<OrderVo>> getorders(Integer shopid,Integer status) {
         String key = "shoporders"+shopid;
         List<OrderVo> ans = new ArrayList<>();
-        ValueOperations<String,List<OrderVo>> valueOperations = redisTemplate.opsForValue();
-        if (redisTemplate.hasKey(key)){
-            List<OrderVo> voList = valueOperations.get(key);
-            for (OrderVo orderVo: voList){
-                if (orderVo.getStatus()==status){
-                    ans.add(orderVo);
-                }
-            }
-           return  ServiceResponse.createBysuccessMessage("ok",ans);
-        }
+       ValueOperations<String,List<OrderVo>> valueOperations = redisTemplate.opsForValue();
+//        if (redisTemplate.hasKey(key)){
+//            List<OrderVo> voList = valueOperations.get(key);
+//            for (OrderVo orderVo: voList){
+//                if (orderVo.getStatus()==status){
+//                    ans.add(orderVo);
+//                }
+//            }
+//           return  ServiceResponse.createBysuccessMessage("ok",ans);
+//        }
         List<Order> list = orderMapper.selectOrderbyshopid(shopid);
         List<OrderVo> voList=makeOrderVo(list);
         valueOperations.set(key,voList,5, TimeUnit.HOURS);
@@ -267,9 +268,9 @@ public class ShopServiceImp implements ShopService {
     }
 
     @Override
-    public ServiceResponse<Shop> getshopinfo(Integer userId) {
+    public ServiceResponse< List<Shop>> getshopinfo(Integer userId) {
         if (userId==null) return ServiceResponse.createByErrorMessage("id错误");
-        Shop shop = shopMapper.selectByuserid(userId);
+        List<Shop> shop = shopMapper.selectByuserid(userId);
         if (shop==null) return ServiceResponse.createByErrorMessage("用户没有商铺信息");
         return ServiceResponse.createBysuccessMessage("ok",shop);
     }

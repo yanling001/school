@@ -10,10 +10,11 @@
       <arg column="tel" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="intro" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
-    shop_id, category, shopname, location, tel, user_id, intro
+    shop_id, category, shopname, location, tel, user_id, intro, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -28,10 +29,10 @@
   <insert id="insert" parameterType="com.example.demo.pojo.Shop">
     insert into shop (shop_id, category, shopname, 
       location, tel, user_id, 
-      intro)
+      intro, create_time)
     values (#{shopId,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{shopname,jdbcType=VARCHAR}, 
       #{location,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
-      #{intro,jdbcType=VARCHAR})
+      #{intro,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.example.demo.pojo.Shop">
     insert into shop
@@ -57,6 +58,9 @@
       <if test="intro != null">
         intro,
       </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopId != null">
@@ -79,6 +83,9 @@
       </if>
       <if test="intro != null">
         #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -103,6 +110,9 @@
       <if test="intro != null">
         intro = #{intro,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where shop_id = #{shopId,jdbcType=INTEGER}
   </update>
@@ -113,7 +123,8 @@
       location = #{location,jdbcType=VARCHAR},
       tel = #{tel,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
-      intro = #{intro,jdbcType=VARCHAR}
+      intro = #{intro,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where shop_id = #{shopId,jdbcType=INTEGER}
   </update>
 
@@ -145,9 +156,12 @@
       <if test="intro != null">
         and intro = #{intro,jdbcType=VARCHAR}
       </if>
+      <if test="createTime != null">
+       and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
     </where>
   </select>
-<select id="selectByuserid" resultMap="" parameterType="java.lang.Integer">
+<select id="selectByuserid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   select
   <include refid="Base_Column_List" />
   from shop

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +59,11 @@ public class SecondHandController {
     public  ServiceResponse addproduct(@RequestBody String info){
         SecondHandProduct secondHandProduct=JSON.parseObject(info,SecondHandProduct.class);
         System.out.println(JSONObject.parseObject(info).getString("createTime"));
-        secondHandProduct.setCreateTime(DateTimeUtil.strToDate(JSONObject.parseObject(info).getString("createTime")));
-//        JSONObject jsonObject= JSONObject.parseObject(info);
+        secondHandProduct.setCreateTime(DateTimeUtil.strToDate(DateTimeUtil.dateToStr(new Date())));
+        if(secondHandProduct.getUserId()==null){
+            return ServiceResponse.createByErrorMessage("参数错误");
+        }
+        //        JSONObject jsonObject= JSONObject.parseObject(info);
 //        SecondHandProduct secondHandProduct=new SecondHandProduct();
 //        secondHandProduct.setPrice(jsonObject.getBigDecimal("price"));
 //        secondHandProduct.setContent(jsonObject.getString("content"));
@@ -89,6 +93,9 @@ public class SecondHandController {
     @RequestMapping("/comments")
     public  ServiceResponse comments(@RequestBody String info){
         ProductComment productComment = JSON.parseObject(info,ProductComment.class);
+        if (productComment.getUserId()==null||productComment.getProductId()==null){
+            return ServiceResponse.createByErrorMessage("参数错误");
+        }
         List<String> list = (List<String>) JSONObject.parseObject(info).get("images");
         return  secondHandService.comments(productComment,list);
 

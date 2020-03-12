@@ -34,10 +34,15 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    //zhang
 //    private String appid= "wxba447fb7b8387ff2";
 //    private String appsecret="e420d0eb7fdc85016d2a885a7ee3f162";
-    private String appid= "wx6ed324df0267565f";
-    private String appsecret="069b310fb741669422d3995cfaf54030";
+    //zhu
+      private String appid= "wx6ed324df0267565f";
+      private String appsecret="069b310fb741669422d3995cfaf54030";
+    //fu
+//    private String appid= "wx0333e863f36eb234";
+//    private String appsecret="8f5f5143d813e7c450f99335d0c4614a";
     private String openid;
     private String sessionid;
     @Autowired

@@ -41,6 +41,7 @@ public class SecondHandServiceImp implements SecondHandService {
 //            return  ServiceResponse.createBysuccessMessage("ok",list);
 //        }
        List<SecondHandProduct> list=secondHandProductMapper.selectAll();
+       if (list==null) return  ServiceResponse.createByErrorMessage("无信息");
        List<SecondHandProductVo> relist=makevoeasy(list);
         operations.set(key,relist,5, TimeUnit.HOURS);
         return ServiceResponse.createBysuccessMessage("ok",relist);
@@ -49,7 +50,8 @@ public class SecondHandServiceImp implements SecondHandService {
     private List<SecondHandProductVo> makevoeasy(List<SecondHandProduct> list) {
         ArrayList<SecondHandProductVo> lists=new ArrayList<>();
         for (SecondHandProduct secondHandProduct:list){
-            SecondHandProductVo secondHandProductVo=new SecondHandProductVo();
+            if (secondHandProduct==null) continue;
+            SecondHandProductVo secondHandProductVo = new SecondHandProductVo();
             secondHandProductVo.setContent(secondHandProduct.getContent());
             secondHandProductVo.setCreateTime(secondHandProduct.getCreateTime());
             secondHandProductVo.setProductId(secondHandProduct.getProductId());
@@ -146,6 +148,7 @@ public class SecondHandServiceImp implements SecondHandService {
         SecondHandProduct secondHandProduct = secondHandProductMapper.selectByPrimaryKey(id);
         if (secondHandProduct==null) return ServiceResponse.createByErrorMessage("id错误");
         SecondHandProductVo makevo = makevo(secondHandProduct);
+        if (makevo==null) return  ServiceResponse.createByErrorMessage("参数错误");
         valueOperations.set(key,makevo,5, TimeUnit.HOURS);
         return  ServiceResponse.createBysuccessMessage("ok",makevo);
 
@@ -160,6 +163,7 @@ public class SecondHandServiceImp implements SecondHandService {
            SecondHandProduct secondHandProduct =  secondHandProductMapper.selectByPrimaryKey(productid);
            secondHandProducts.add(secondHandProduct);
        }
+       if (secondHandProducts==null) return ServiceResponse.createByErrorMessage("用户没有收藏信息");
         List<SecondHandProductVo> makevoeasy = makevoeasy(secondHandProducts);
         return ServiceResponse.createBysuccessMessage("ok",makevoeasy);
     }

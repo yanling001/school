@@ -35,7 +35,7 @@ public class ShopController {
 
     //根据用户的id获取shop信息
     @RequestMapping("getshopinfo")
-    public  ServiceResponse<Shop> getshopinfo(Integer userId){
+    public  ServiceResponse< List<Shop>> getshopinfo(Integer userId){
         if (userId==null){
             return  ServiceResponse.createByErrorMessage("参数错误");
         }

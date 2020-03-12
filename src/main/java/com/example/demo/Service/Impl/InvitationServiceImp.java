@@ -42,7 +42,10 @@ public class InvitationServiceImp implements InvitationService {
             return  ServiceResponse.createBysuccessMessage("ok",list);
         }
         List<Invitation> list=  invitationMapper.selectAll();
+        if (list==null)
+            return ServiceResponse.createBysuccessMessage("ok",null);
         List<InvitationVo> invitationVos = makevo(list);
+        if (invitationVos==null) return ServiceResponse.createByErrorMessage("参数错误");
         operations.set(key,invitationVos,5, TimeUnit.HOURS);//参数 分别是 key，value，访问超时时间，过期时间
         return  ServiceResponse.createBysuccessMessage("ok",invitationVos);
     }
@@ -98,6 +101,8 @@ public class InvitationServiceImp implements InvitationService {
            invitationVo.setId(temp.getInvitationId());
            invitationVo.setInvitationStatus(temp.getInvitationStatus());
            User user=userMapper.selectByPrimaryKey(temp.getUesrId());
+           if (user==null)
+               return null;
            invitationVo.setPerson(user.getNickname());
            invitationVo.setHead(user.getAvatarurl());
            invitationVo.setUesrId(temp.getUesrId());

@@ -1,8 +1,8 @@
 package com.example.demo.pojo;
 
-import java.io.Serializable;
+import java.util.Date;
 
-public class Shop  implements Serializable {
+public class Shop {
     private Integer shopId;
 
     private String category;
@@ -17,7 +17,9 @@ public class Shop  implements Serializable {
 
     private String intro;
 
-    public Shop(Integer shopId, String category, String shopname, String location, String tel, Integer userId, String intro) {
+    private Date createTime;
+
+    public Shop(Integer shopId, String category, String shopname, String location, String tel, Integer userId, String intro, Date createTime) {
         this.shopId = shopId;
         this.category = category;
         this.shopname = shopname;
@@ -25,6 +27,7 @@ public class Shop  implements Serializable {
         this.tel = tel;
         this.userId = userId;
         this.intro = intro;
+        this.createTime = createTime;
     }
 
     public Shop() {
@@ -85,5 +88,13 @@ public class Shop  implements Serializable {
 
     public void setIntro(String intro) {
         this.intro = intro == null ? null : intro.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
